@@ -43,3 +43,11 @@ body {
 .outline_btn {
   @apply rounded-full border border-black bg-transparent py-1.5 px-5 text-black transition-all hover:bg-black hover:text-white text-center text-sm flex items-center justify-center;
 }
+
+.form_input {
+  @apply w-full flex rounded-lg p-3 text-sm text-gray-500 outline-0;
+}
+
+.w_inherit {
+  width: inherit;
+}

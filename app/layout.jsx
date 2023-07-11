@@ -6,7 +6,7 @@ import Nav from "@components/Nav";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Are you smarter than a 5th grader - Survival mode",
+  title: "Are you smarter than a 5th grader",
   description:
     "An online Quiz game where an adult contestants try to answer questions drawn from elementary school textbooks",
 };
