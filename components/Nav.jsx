@@ -8,7 +8,6 @@ import brandLogo from "@public/assets/brand.png"
 
 const Nav = () => {
   const { data: session } = useSession();
-  console.log(session, 'session')
 
   const [providers, setProviders] = useState(null);
 
@@ -26,7 +25,7 @@ const Nav = () => {
           src={brandLogo}
           alt="logo"
           width='auto'
-          height={30}
+          height={40}
           className="object-contain"
         />
       </Link>
@@ -34,7 +33,7 @@ const Nav = () => {
       <div>
         {session?.user ? (
           <div className="flex gap-3 md:gap-5">
-            <Link href="/create-room" className="black_btn">
+            <Link href="/room" className="black_btn">
               Create Room
             </Link>
 
