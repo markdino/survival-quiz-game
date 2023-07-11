@@ -19,11 +19,10 @@ const handler = NextAuth({
 
       return session;
     },
-    async signIn({ account, profile, user, credentials }) {
-      console.log('SignIn',{ account, profile, user, credentials })
+    async signIn({ account, profile }) {
 
       // only accept company google accounts. HAHAHAHA
-      if (account.provider === 'google' && !profile.email?.endsWith('@crescendocollective.com')){
+      if (account.provider === 'google' && profile.hd !== 'crescendocollective.com'){
         console.error('Restricted for company email only')
         return false
       }
