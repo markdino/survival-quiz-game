@@ -12,7 +12,7 @@ const quizSchema = new Schema({
   },
   answer: {
     type: String,
-    required: [true, "Aswer is required!"],
+    required: [true, "Answer is required!"],
   },
 });
 
