@@ -12,8 +12,11 @@ const quizSchema = new Schema({
   },
   answer: {
     type: String,
-    required: [true, "Answer is required!"],
   },
+  type: {
+    type: String,
+    required: [true, "Type is required. e.g.('poll' or 'qna')"]
+  }
 });
 
 const Quiz = models.Quiz || model("quiz", quizSchema);
