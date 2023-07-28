@@ -4,7 +4,7 @@ import { connectToDB } from "@utils/database";
 export const GET = async (req) => {
   const exclude = req.query?.exclude;
 
-  console.log('Query', req.query)
+  console.log('Query', req.query) // undefined
 
     try {
       await connectToDB();
