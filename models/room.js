@@ -1,6 +1,6 @@
 import { Schema, model, models } from "mongoose";
-import { participantSchema } from "@model/participant";
-import { quizSchema } from "@model/quiz";
+import { participantSchema } from "./participant";
+import { quizSchema } from "./quiz";
 import nanoId from "nano-id";
 
 export const roomSchema = new Schema({
