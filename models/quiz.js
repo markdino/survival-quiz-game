@@ -1,6 +1,6 @@
 import { Schema, model, models } from "mongoose";
 
-const quizSchema = new Schema({
+export const quizSchema = new Schema({
   question: {
     type: String,
     unique: [true, "Question already exists!"],
