@@ -1,0 +1,59 @@
+import Room from "@models/room";
+import User from "@models/user";
+import { connectToDB } from "@utils/database";
+
+export const GET = async (req, { params }) => {
+  const { id } = params;
+
+  try {
+    await connectToDB();
+
+    const room = await Room.findOne({ code: id })
+      .populate({
+        path: "creator",
+        select: "-__v -email",
+        model: User,
+      })
+      .populate({
+        path: "participants.user",
+        select: "-__v -email",
+        model: User,
+      })
+      .select("-__v");
+    if (!room) return new Response("Room Not Found", { status: 404 });
+
+    return new Response(JSON.stringify(room), { status: 201 });
+  } catch (error) {
+    console.log(error.message);
+    return new Response("Internal Server Error", { status: 500 });
+  }
+};
+
+export const PATCH = async (req, { params }) => {
+  const updateData = await req.json();
+  console.log(updateData);
+  try {
+    await connectToDB();
+
+    const room = await Room.findByIdAndUpdate(params.id, updateData, {
+      new: true,
+    })
+      .populate({
+        path: "creator",
+        select: "-__v -email",
+        model: User,
+      })
+      .populate({
+        path: "participants.user",
+        select: "-__v -email",
+        model: User,
+      })
+      .select("-__v");
+    if (!room) return new Response("Room Not Found", { status: 404 });
+
+    return new Response(JSON.stringify(room), { status: 200 });
+  } catch (error) {
+    console.log(error.message);
+    return new Response("Internal Server Error", { status: 500 });
+  }
+};
