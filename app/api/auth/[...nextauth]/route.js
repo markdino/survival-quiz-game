@@ -39,7 +39,11 @@ const handler = NextAuth({
             email: profile.email,
             username: profile.name.replace(" ", "").toLowerCase(),
             image: profile.picture,
+            isGuest: false,
           });
+        } else {
+          userExists.lastLogin = new Date()
+          await userExists.save()
         }
 
         return true
