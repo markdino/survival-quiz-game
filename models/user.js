@@ -15,9 +15,9 @@ const UserSchema = new Schema({
   image: {
     type: String,
   },
-  type: {
-    type: String,
-    default: 'guest'
+  isGuest: {
+    type: Boolean,
+    default: true,
   },
   lastLogin: {
     type: Date,
