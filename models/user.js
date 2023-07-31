@@ -14,6 +14,14 @@ const UserSchema = new Schema({
   },
   image: {
     type: String,
+  },
+  type: {
+    type: String,
+    default: 'guest'
+  },
+  lastLogin: {
+    type: Date,
+    default: new Date()
   }
 });
 
