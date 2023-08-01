@@ -1,7 +1,5 @@
 import { Schema, model, models } from "mongoose";
 import { participantSchema } from "./participant";
-import { quizSchema } from "./quiz";
-import nanoId from "nano-id";
 
 export const roomSchema = new Schema({
   name: {
@@ -9,7 +7,7 @@ export const roomSchema = new Schema({
   },
   code: {
     type: String,
-    default: nanoId(13),
+    required: [true, "Room code is required!"],
   },
   creator: {
     type: Schema.Types.ObjectId,
@@ -33,7 +31,8 @@ export const roomSchema = new Schema({
     default: [],
   },
   currentQuiz: {
-    type: quizSchema,
+    type: String,
+    ref: "Quiz"
   },
   archivedQuiz: {
     type: [Schema.Types.ObjectId],
@@ -41,6 +40,6 @@ export const roomSchema = new Schema({
   },
 });
 
-const Room = models.Room || model("room", roomSchema);
+const Room = models.Room || model("Room", roomSchema);
 
 export default Room;
