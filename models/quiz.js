@@ -19,6 +19,6 @@ export const quizSchema = new Schema({
   }
 });
 
-const Quiz = models.Quiz || model("quiz", quizSchema);
+const Quiz = models.Quiz || model("Quiz", quizSchema);
 
 export default Quiz;

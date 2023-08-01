@@ -1,3 +1,4 @@
+import Quiz from "@models/quiz";
 import Room from "@models/room";
 import User from "@models/user";
 import { connectToDB } from "@utils/database";
@@ -18,6 +19,11 @@ export const GET = async (req, { params }) => {
         path: "participants.user",
         select: "-__v -email",
         model: User,
+      })
+      .populate({
+        path: "currentQuiz",
+        select: "-__v -answer",
+        model: Quiz,
       })
       .select("-__v");
     if (!room) return new Response("Room Not Found", { status: 404 });
@@ -47,6 +53,11 @@ export const PATCH = async (req, { params }) => {
         path: "participants.user",
         select: "-__v -email",
         model: User,
+      })
+      .populate({
+        path: "currentQuiz",
+        select: "-__v -answer",
+        model: Quiz,
       })
       .select("-__v");
     if (!room) return new Response("Room Not Found", { status: 404 });
