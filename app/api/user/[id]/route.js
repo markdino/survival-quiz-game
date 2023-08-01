@@ -15,7 +15,7 @@ export const GET = async (req, { params }) => {
 
     return new Response(JSON.stringify(user), { status: 201 });
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
     if (error.name === "CastError" && error.path === "_id") {
       return new Response(
         JSON.stringify({ error: "Invalid user id provided" }),
