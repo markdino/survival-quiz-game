@@ -29,7 +29,11 @@ export const POST = async (req) => {
       return new Response(JSON.stringify(newUser), { status: 201 });
     }
 
-    // If user exist, just return the data 
+    // If user exist, update lastLogin and save
+    user.lastLogin = new Date();
+    await user.save();
+
+    // Then return the data
     return new Response(JSON.stringify(user), { status: 201 });
   } catch (error) {
     if (error.name === "MongoServerError" && error.code === 11000) {
