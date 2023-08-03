@@ -1,6 +1,7 @@
 import React from "react";
 import PlayerList from "./PlayerList";
 import StartGame from "./StartGame";
+import NextQuestion from "./NextQuestion";
 
 // Dummy player data
 const players = [
@@ -21,6 +22,8 @@ const CreatorView = () => {
     <div>
       <PlayerList players={players}/>
       <StartGame />
+      {/* Choices component etc */}
+      <NextQuestion/>
     </div>
   );
 };
