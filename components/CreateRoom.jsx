@@ -18,7 +18,7 @@ const CreateRoom = () => {
       onClick={handleClick}
       className="outline_btn w-full mx-auto container max-w-md"
     >
-      Create a Room
+      <span className="py-1">Create a Room</span>
     </button>
   );
 };

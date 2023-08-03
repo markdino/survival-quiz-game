@@ -1,5 +1,6 @@
 import { metadata } from "@app/layout";
 import CreateRoom from "@components/CreateRoom";
+import Divider from "@components/Divider";
 import JoinField from "@components/JoinField";
 
 export default function Home() {
@@ -12,7 +13,7 @@ export default function Home() {
         </h1>
         <section>
           <JoinField />
-          or
+          <Divider text="or" className="max-w-md mx-auto" />
           <CreateRoom />
         </section>
       </div>
