@@ -11,16 +11,17 @@ const Alert = ({ text, variant, show }) => {
     dark: "text-gray-800 bg-gray-300 border-gray-400",
   };
   return (
-    <div
-      id="alert"
-      className={classNames(
-        "font-normal text-left px-3 py-1 rounded-lg border mt-1",
-        { hidden: !show },
-        color[variant] || color.light
-      )}
-    >
-      {text}
-    </div>
+    show && (
+      <div
+        id="alert"
+        className={classNames(
+          "font-normal text-left px-3 py-1 rounded-lg border mt-1",
+          color[variant] || color.light
+        )}
+      >
+        {text}
+      </div>
+    )
   );
 };
 
