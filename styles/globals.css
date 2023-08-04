@@ -29,7 +29,7 @@ body {
 
 .main {
   width: 100vw;
-  min-height: calc(100vh - var(--nav-height));
+  /* min-height: calc(100vh - var(--nav-height)); */
   position: fixed;
   display: flex;
   justify-content: center;
