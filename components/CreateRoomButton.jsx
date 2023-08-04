@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 
-const CreateRoom = () => {
+const CreateRoomButton = () => {
   return (
     <Link
       href="/room"
@@ -12,4 +12,4 @@ const CreateRoom = () => {
   );
 };
 
-export default CreateRoom;
+export default CreateRoomButton;

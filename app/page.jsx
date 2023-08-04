@@ -1,5 +1,5 @@
 import { metadata } from "@app/layout";
-import CreateRoom from "@components/CreateRoom";
+import CreateRoomButton from "@components/CreateRoomButton";
 import Divider from "@components/Divider";
 import JoinField from "@components/JoinField";
 
@@ -14,7 +14,7 @@ export default function Home() {
         <section>
           <JoinField />
           <Divider text="or" className="max-w-md mx-auto" />
-          <CreateRoom />
+          <CreateRoomButton />
         </section>
       </div>
     </main>
