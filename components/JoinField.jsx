@@ -1,21 +1,15 @@
 "use client";
 import { useState } from "react";
-import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const JoinField = () => {
   const [field, setField] = useState("");
 
   const router = useRouter();
-  const { data: session } = useSession();
 
   const handleClick = () => {
     if (!field) return;
-    if (!session?.user) {
-      signIn(undefined, { callbackUrl: `/room/${field}` });
-    } else {
-      router.push(`/room/${field}`);
-    }
+    router.push(`/room/${field}`);
   };
   return (
     <div className="mx-auto container max-w-md items-end">
