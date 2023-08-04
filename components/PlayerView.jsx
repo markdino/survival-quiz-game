@@ -1,19 +1,26 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import PlayerGame from './PlayerGame'
 import PlayerLogin from './PlayerLogin'
+import UserContext from '@store/UserContext'
 
 // Dummy game data
 const question = "What comes after Mercury?"
 const choices = ["7/11", "McDonalds", "Venus", "Jollibee"]
 const answer = "Venus"
 
-const PlayerView = () => {
+const PlayerView = ({ data }) => {
   const [ startGame, setStartGame ] = useState(false)
   const [ player, setPlayer ] = useState("")
   const [ playerEliminated, setPlayerEliminated ] = useState(false)
   const [ showQuestion, setShowQuestion ] = useState(true)
   const [ showAnswer, setShowAnswer ] = useState(false)
   const [ startTimer, setStartTimer ] = useState(false)
+
+  const { user } = useContext(UserContext)
+
+  const playerExist = data.participants.some(
+    (participant) => participant.user._id === user.id
+  );
 
   // Game started component
   const renderGameStarted = () => (
@@ -24,7 +31,7 @@ const PlayerView = () => {
 
   // Render game ui or game started
   const handleStartGame = () => {
-    if (player === "") return renderGameStarted()
+    if (data.started) return renderGameStarted()
     return (
         <PlayerGame 
           question={question} 
@@ -43,7 +50,7 @@ const PlayerView = () => {
 
   return (
     <div className="flex items-center justify-center">
-        { startGame ? handleStartGame() : <PlayerLogin loginPlayer={setPlayer}/> }
+        { playerExist ? handleStartGame() : <PlayerLogin roomId={data._id} /> }
     </div>
   )
 }

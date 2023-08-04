@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useContext } from "react";
 import LoginForm from "./LoginForm";
+import UserContext from "@store/UserContext";
+import { joinRoom } from "@services/api";
 
-const PlayerLogin = ({ loginPlayer }) => {
-  const [playerReady, setPlayerReady] = useState(false);
+const PlayerLogin = ({ roomId }) => {
+//   const [playerReady, setPlayerReady] = useState(false);
+  
+  const { isLoggedIn, setRequestFetch } = useContext(UserContext)
 
   // Render wait component
   const renderWait = () => (
@@ -13,13 +17,21 @@ const PlayerLogin = ({ loginPlayer }) => {
 
   return (
     <section className="flex items-center justify-center m-24 py-24 absolute top-0">
-      {!playerReady ? (
+      {!isLoggedIn ? (
         <LoginForm
           label="Input your Username"
           placeholder="Username"
           onSuccess={(user) => {
-            setPlayerReady(true);
-            loginPlayer(user.username);
+            joinRoom({
+              roomId,
+              userId: user._id,
+              onSuccess: () => {
+                setRequestFetch(true)
+              },
+              onFailed: (error) => {
+                console.log({error})
+              }
+            })
           }}
         />
       ) : (

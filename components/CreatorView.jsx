@@ -17,7 +17,7 @@ const players = [
   {id: 10, name: "Sam Wilson", isOnline: true},
 ]
 
-const CreatorView = () => {
+const CreatorView = ({ data }) => {
   return (
     <div>
       <PlayerList players={players}/>
