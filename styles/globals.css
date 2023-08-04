@@ -6,6 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start: #f8f8f6;
   --background-end: #ffffff;
+  --nav-height: 104px;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -28,12 +29,12 @@ body {
 
 .main {
   width: 100vw;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--nav-height));
   position: fixed;
   display: flex;
   justify-content: center;
   padding: 120px 24px 160px 24px;
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 
 .black_btn {
