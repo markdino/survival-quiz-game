@@ -16,33 +16,34 @@ export const UserContextProvider = ({ children }) => {
   const checkLoggedUser = async () => {
     const session = await getSession();
     const localUser = localStorage.getItem("user");
-    let loggedUser;
 
     if (session?.user) {
       const { name, ...rest } = session.user;
-      loggedUser = {
+      setUser({
         username: name.replace(" ", ""),
         ...rest,
-      };
+      });
+      setIsLoggedIn(true);
     } else if (localUser) {
       const { id } = JSON.parse(localUser);
       getUserById({
         id,
         onSuccess: (data) => {
-            loggedUser = data
+          setUser(data);
+          setIsLoggedIn(true);
         },
         onFailed: () => {
-            localStorage.removeItem("user");
-        }
-      })
+          localStorage.removeItem("user");
+          setUser(null);
+          setIsLoggedIn(false);
+        },
+      });
+    } else {
+      setUser(null);
+      setIsLoggedIn(false);
     }
 
-    if (loggedUser) {
-      setIsLoggedIn(true);
-      setUser(loggedUser);
-    }
-
-    return loggedUser;
+    return user;
   };
 
   useEffect(() => {
