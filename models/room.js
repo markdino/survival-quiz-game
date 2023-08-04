@@ -1,5 +1,5 @@
 import { Schema, model, models } from "mongoose";
-import { participantSchema } from "./participant";
+// import { participantSchema } from "./participant";
 
 export const roomSchema = new Schema({
   name: {
@@ -27,12 +27,28 @@ export const roomSchema = new Schema({
     default: false,
   },
   participants: {
-    type: [participantSchema],
+    type: [
+      {
+        user: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+          required: [true, "User ID is required!"],
+        },
+        answer: {
+          type: String,
+          default: "",
+        },
+        active: {
+          type: Boolean,
+          default: true,
+        },
+      },
+    ],
     default: [],
   },
   currentQuiz: {
     type: String,
-    ref: "Quiz"
+    ref: "Quiz",
   },
   archivedQuiz: {
     type: [Schema.Types.ObjectId],
