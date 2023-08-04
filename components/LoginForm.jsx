@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Divider from "./Divider";
 import { signIn, getProviders } from "next-auth/react";
 import Image from "next/image";
 import googleLogo from "@assets/images/google.png";
-import axios from "axios";
 import classNames from "classnames";
 import Alert from "./Alert";
+import { signInUser } from "@services/api";
+import UserContext from "@store/UserContext";
 
 const LoginForm = ({
   onSubmit = () => null,
@@ -19,22 +20,28 @@ const LoginForm = ({
   const [isLoading, setIsLoading] = useState(false);
   const [providers, setProviders] = useState(null);
 
+  const { checkLoggedUser } = useContext(UserContext);
+
   const handleLogin = () => {
-    setError(null);
-    setIsLoading(true);
-    onSubmit();
-    axios
-      .post("/api/user", { username })
-      .then(({ data }) => {
+    signInUser({
+      userData: { username },
+      onSubmit: () => {
+        setError(null);
+        setIsLoading(true);
+        onSubmit();
+      },
+      onSuccess: (data) => {
         localStorage.setItem("user", JSON.stringify(data));
-        onSuccess(data);
         setIsLoading(false);
-      })
-      .catch(({ response }) => {
+        checkLoggedUser()
+        onSuccess(data);
+      },
+      onFailed: (response) => {
         setError({ message: response.data.error });
         setIsLoading(false);
         onFailed(response);
-      });
+      },
+    });
   };
 
   useEffect(() => {
@@ -79,7 +86,9 @@ const LoginForm = ({
                 type="button"
                 key={provider.name}
                 onClick={() => {
-                  signIn(provider.id);
+                  signIn(provider.id)
+                    .then(() => checkLoggedUser())
+                    .catch((error) => console.error(error));
                 }}
                 className="px-5 py-3 text-sm border rounded-lg w-full relative"
               >
