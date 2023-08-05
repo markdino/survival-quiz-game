@@ -73,6 +73,24 @@ export const getRoomData = ({
       });
   };
 
+  export const updateRoomData = ({
+    roomId,
+    newData,
+    onSubmit = () => {},
+    onSuccess = () => {},
+    onFailed = () => {},
+  }) => {
+    onSubmit();
+    axios
+      .patch(`/api/room/${roomId}`, newData)
+      .then(({ data }) => {
+        onSuccess(data);
+      })
+      .catch(({ response }) => {
+        onFailed(response);
+      });
+  };
+
   export const getQuiz = ({
     exclude = [],
     onSubmit = () => {},
