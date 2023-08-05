@@ -20,7 +20,7 @@ const players = [
 const CreatorView = ({ data }) => {
   return (
     <div>
-      <PlayerList players={players}/>
+      <PlayerList players={data?.participants}/>
       <StartGame />
       {/* Choices component etc */}
       <NextQuestion/>
