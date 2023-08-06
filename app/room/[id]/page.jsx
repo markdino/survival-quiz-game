@@ -12,17 +12,17 @@ const RoomPage = () => {
 
   const isPlayer = false
 
-  // useEffect(() => {
-  //   const checkSession = async () => {
-  //       const session = await getSession()
-  //       if (!session?.user) {
-  //           router.push("/");
-  //         }
-  //   }
+  useEffect(() => {
+    const checkSession = async () => {
+        const session = await getSession()
+        if (!session?.user) {
+            router.push("/");
+          }
+    }
 
-  //   checkSession()
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [params?.id]);
+    checkSession()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params?.id]);
 
   return (
     <SocketContext.Provider value={socket}>
