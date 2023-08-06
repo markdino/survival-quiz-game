@@ -1,8 +1,13 @@
-import React from 'react'
+import { SocketContext } from '@websocket'
+import { GAME_TOPIC } from '@websocket/topics'
+import React, { useContext } from 'react'
 
 const StartGame = () => {
+    const socket = useContext(SocketContext)
+
     const handleClick = () => {
         console.log("Start Game")
+        socket.emit(GAME_TOPIC, {startGame: true})
         // Start Game logic here
     }
 

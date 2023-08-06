@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import PlayerList from "./PlayerList";
 import StartGame from "./StartGame";
 import NextQuestion from "./NextQuestion";
+import { SocketContext } from "@websocket";
+import { GAME_TOPIC } from "@websocket/topics";
 
 // Dummy player data
 const players = [
@@ -18,6 +20,15 @@ const players = [
 ]
 
 const CreatorView = () => {
+  const socket = useContext(SocketContext)
+
+  useEffect(() => {
+    socket.on(GAME_TOPIC, (data) => {
+      console.log(data.startGame)
+    }
+    )
+  },[socket])
+
   return (
     <div>
       <PlayerList players={players}/>
