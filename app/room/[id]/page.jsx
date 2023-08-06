@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import PlayerView from "@components/PlayerView";
 import CreatorView from "@components/CreatorView";
-import { getRoomData } from "@services/api";
+import { getRoomData, updateRoomData } from "@services/api";
 import UserContext from "@store/UserContext";
 import Alert from "@components/Alert";
 
@@ -26,6 +26,10 @@ const RoomPage = () => {
           setError(null);
         },
         onSuccess: (data) => {
+          if (initialFetch) {
+            updateRoomData({roomId: data._id, newData: { active: true }})
+          }
+
           setRoomData(data);
           setIsLoading(false);
           setRequestFetch(false)
@@ -43,9 +47,13 @@ const RoomPage = () => {
         },
       });
     }
+
+    return () => {
+      updateRoomData({ roomId: roomData?._id, newData: { active: false } })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestFetch]);
-  console.log(roomData); //<<************/ Remove this on deploy **********************
+  console.log(roomData); //<<************/ Remove this console.log on deploy **********************
   return (
     <section className="container max-w-screen-xl mx-auto">
       <div>Room {params?.id}</div>
@@ -54,7 +62,7 @@ const RoomPage = () => {
       {roomData &&
         !isChecking &&
         (user?.id === roomData.creator?._id ? (
-          <CreatorView data={roomData} />
+          <CreatorView data={roomData} setRoomData={setRoomData} />
         ) : (
           <PlayerView data={roomData} />
         ))}

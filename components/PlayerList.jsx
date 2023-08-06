@@ -1,26 +1,44 @@
-import React from 'react'
+import React from "react";
+import classNames from "classnames";
 
-const PlayerList = ({players}) => {
-    const renderPlayerName = (player) =>  {
-        return <li 
-        key={player.id}
-        className={`my-2 mx-4 text-xl flex justify-between items-center ${!player.isOnline ? "text-gray-300" : null}`}
-        >
-            {player.name}
-            <div className={`bg-${player.isOnline ? "green" : "red"}-500 w-4 h-4 rounded-full ml-16`}></div>
-        </li>
-    }
-
+const PlayerName = ({ userName, isActive }) => {
   return (
-    <section className="flex flex-col items-center justify-center 
-        w-1/4 h-1/2 mt-24 mx-8 py-24 absolute top-0 left-0
-        border-4 rounded-md border-black">
-            <h3 className='my-16 text-2xl absolute top-0'>List of Players: </h3>
-            <ul className="w-full p-8 my-4 overflow-auto">
-                {players.map(player => renderPlayerName(player))}
-            </ul>
-    </section>
-  )
-}
+    <li
+      className={classNames(
+        "my-2 mx-4 text-xl flex justify-between items-center",
+        { "text-gray-300": !isActive }
+      )}
+    >
+      {userName}
+      <div
+        className={classNames(
+          "w-4 h-4 rounded-full ml-16",
+          `bg-${isActive ? "green" : "red"}-500`
+        )}
+      ></div>
+    </li>
+  );
+};
 
-export default PlayerList
+const PlayerList = ({ players }) => {
+  return (
+    <section
+      className="flex flex-col items-center justify-center 
+        w-1/4 h-1/2 mt-24 mx-8 py-24 absolute top-0 left-0
+        border-4 rounded-md border-black"
+    >
+      <h3 className="my-16 text-2xl absolute top-0">List of Players: </h3>
+      <ul className="w-full p-8 my-4 overflow-auto">
+        {players.map((player) => (
+          <PlayerName
+            key={player._id}
+            userName={player.user?.username}
+            isActive={player.active}
+          />
+        ))}
+      </ul>
+    </section>
+  );
+};
+
+export default PlayerList;
