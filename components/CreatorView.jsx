@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useState, useEffect } from "react";
 import PlayerList from "./PlayerList";
 import StartGame from "./StartGame";
@@ -5,6 +6,7 @@ import NextQuestion from "./NextQuestion";
 import { SocketContext } from "@websocket";
 import { GAME_TOPIC } from "@websocket/topics";
 import { getQuiz, revealQuiz, updateRoomData } from "@services/api";
+import UserContext from "@store/UserContext";
 
 const CreatorView = ({ data, setRoomData = () => null }) => {
   const [quiz, setQuiz] = useState(null);
@@ -12,10 +14,16 @@ const CreatorView = ({ data, setRoomData = () => null }) => {
   const [started, setStarted] = useState(false);
   const [answer, setAnswer] = useState("");
 
-  const socket = useContext(SocketContext)
+  const socket = useContext(SocketContext);
+  const { setRequestFetch } = useContext(UserContext);
 
-  const clearParticipantsAnswer = () =>
-    data?.participants.map((participant) => (participant.answer = ""));
+  const clearParticipantsAnswer = () => {
+    const clearedParticipants = data?.participants.map((participant) => {
+      participant.answer = "";
+      return participant
+    });
+    return clearedParticipants;
+  };
 
   const validateParticipantsAnswer = (answer) => {
     const validatedParticipants = data?.participants.map((participant) => {
@@ -39,6 +47,11 @@ const CreatorView = ({ data, setRoomData = () => null }) => {
           newData: {
             currentQuiz: newQuiz._id,
             participants: clearParticipantsAnswer(),
+            archivedQuiz: archiveQuiz,
+          },
+          onSuccess: () => {
+            setRequestFetch(true)
+            socket.emit(GAME_TOPIC, { playerRequestFetch: true });
           },
         });
       },
@@ -54,7 +67,8 @@ const CreatorView = ({ data, setRoomData = () => null }) => {
           roomId: data?._id,
           newData: { answer, participants: validateParticipantsAnswer(answer) },
           onSuccess: (data) => {
-            setRoomData(data);
+            setRequestFetch(true)
+            socket.emit(GAME_TOPIC, { playerRevealAnswer: true });
           },
         });
       },
@@ -67,7 +81,6 @@ const CreatorView = ({ data, setRoomData = () => null }) => {
       newData: { started: true },
       onSuccess: () => {
         handleNewQuiz();
-        socket.emit(GAME_TOPIC, {startGame: true})
       },
     });
   };
@@ -86,15 +99,17 @@ const CreatorView = ({ data, setRoomData = () => null }) => {
       setAnswer(data.answer);
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
     socket.on(GAME_TOPIC, (data) => {
-      console.log(data.startGame)
-    }
-    )
-  },[socket])
+      console.log('Creator', data)
+      if (data.creatorRequestFetch) {
+        setRequestFetch(true)
+      }
+    });
+    
+  }, [socket]);
 
   return (
     <div>
@@ -102,6 +117,8 @@ const CreatorView = ({ data, setRoomData = () => null }) => {
       <StartGame disabled={started} onClick={handleGameStart} />
       {/* Choices component etc */}
       <NextQuestion
+        disabledNext={!data?.started}
+        disabledReveal={!data?.started}
         handleNextQuestion={handleNewQuiz}
         handleRevealAnswer={handleRevealAnswer}
       />

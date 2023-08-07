@@ -1,7 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useContext } from "react";
 import PlayerGame from "./PlayerGame";
 import PlayerLogin from "./PlayerLogin";
 import UserContext from "@store/UserContext";
+import { SocketContext } from "@websocket";
+import { GAME_TOPIC } from "@websocket/topics";
 
 // Dummy game data
 const question = "What comes after Mercury?";
@@ -16,7 +19,8 @@ const PlayerView = ({ data }) => {
   const [showAnswer, setShowAnswer] = useState(false);
   const [startTimer, setStartTimer] = useState(false);
 
-  const { user } = useContext(UserContext);
+  const { user, setRequestFetch } = useContext(UserContext);
+  const socket = useContext(SocketContext);
 
   const playerExist = data.participants.some(
     (participant) => participant.user._id === user?.id
@@ -67,6 +71,16 @@ const PlayerView = ({ data }) => {
   useEffect(() => {
     console.log(`Is player eliminated? ${playerEliminated}`);
   }, [playerEliminated]);
+
+  useEffect(() => {
+    socket.on(GAME_TOPIC, (data) => {
+      console.log('Creator', data)
+      if (data.playerRequestFetch) {
+        setRequestFetch(true)
+      }
+    });
+    
+  }, [socket]);
 
   return (
     <div className="flex items-center justify-center">
