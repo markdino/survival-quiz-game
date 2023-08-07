@@ -1,6 +1,9 @@
 import React from "react";
+import LargeButton from "./LargeButton";
 
 const NextQuestion = ({
+  disabledNext,
+  disabledReveal,
   handleRevealAnswer = () => null,
   handleNextQuestion = () => null,
 }) => {
@@ -11,18 +14,12 @@ const NextQuestion = ({
             border-4 rounded-md border-black"
     >
       <div className="h-1/2 m-24 flex flex-col justify-between items-center">
-        <button
-          onClick={handleRevealAnswer}
-          className="px-16 py-8 ml-2 text-2xl bg-yellow-400 rounded-lg"
-        >
+        <LargeButton onClick={handleRevealAnswer} disabled={disabledReveal}>
           Reveal Answer
-        </button>
-        <button
-          onClick={handleNextQuestion}
-          className="px-16 py-8 ml-2 text-2xl bg-yellow-400 rounded-lg"
-        >
+        </LargeButton>
+        <LargeButton onClick={handleNextQuestion} disabled={disabledNext}>
           Next Question
-        </button>
+        </LargeButton>
       </div>
     </section>
   );
