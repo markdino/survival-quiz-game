@@ -1,8 +1,9 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
 import PlayerView from "@components/PlayerView";
 import CreatorView from "@components/CreatorView";
+import { SocketContext, socket } from "@websocket";
+import { useContext, useEffect, useState } from "react";
 import { getRoomData, updateRoomData } from "@services/api";
 import UserContext from "@store/UserContext";
 import Alert from "@components/Alert";
@@ -55,7 +56,8 @@ const RoomPage = () => {
   }, [requestFetch]);
   console.log(roomData); //<<************/ Remove this console.log on deploy **********************
   return (
-    <section className="container max-w-screen-xl mx-auto">
+    <SocketContext.Provider value={socket}>
+      <section className="container max-w-screen-xl mx-auto">
       <div>Room {params?.id}</div>
       <Alert text="Loading..." show={isLoading || isChecking} variant="ligth" />
       <Alert text={error?.message} show={error} variant="danger" />
@@ -67,6 +69,7 @@ const RoomPage = () => {
           <PlayerView data={roomData} />
         ))}
     </section>
+    </SocketContext.Provider>
   );
 };
 

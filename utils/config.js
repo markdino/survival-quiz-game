@@ -1,0 +1,1 @@
+export const SOCKET_URL = "https://survival-game-ws-server.onrender.com"
