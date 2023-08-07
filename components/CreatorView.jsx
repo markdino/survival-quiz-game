@@ -1,26 +1,93 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import PlayerList from "./PlayerList";
 import StartGame from "./StartGame";
 import NextQuestion from "./NextQuestion";
 import { SocketContext } from "@websocket";
 import { GAME_TOPIC } from "@websocket/topics";
+import { getQuiz, revealQuiz, updateRoomData } from "@services/api";
 
-// Dummy player data
-const players = [
-  {id: 1, name: "Tony Stark", isOnline: true},
-  {id: 2, name: "Steve Rogers", isOnline: true},
-  {id: 3, name: "Peter Parker", isOnline: true},
-  {id: 4, name: "Natasha Romanoff", isOnline: true},
-  {id: 5, name: "James Rhodes", isOnline: true},
-  {id: 6, name: "Bruce Banner", isOnline: true},
-  {id: 7, name: "Thor Odinson", isOnline: false},
-  {id: 8, name: "Nick Fury", isOnline: true},
-  {id: 9, name: "Wanda Maximoff", isOnline: false},
-  {id: 10, name: "Sam Wilson", isOnline: true},
-]
+const CreatorView = ({ data, setRoomData = () => null }) => {
+  const [quiz, setQuiz] = useState(null);
+  const [archiveQuiz, setArchiveQuiz] = useState([]);
+  const [started, setStarted] = useState(false);
+  const [answer, setAnswer] = useState("");
 
-const CreatorView = () => {
   const socket = useContext(SocketContext)
+
+  const clearParticipantsAnswer = () =>
+    data?.participants.map((participant) => (participant.answer = ""));
+
+  const validateParticipantsAnswer = (answer) => {
+    const validatedParticipants = data?.participants.map((participant) => {
+      if (participant.answer !== answer) {
+        participant.active = false;
+      }
+      return participant;
+    });
+
+    return validatedParticipants;
+  };
+
+  const handleNewQuiz = () => {
+    getQuiz({
+      exclude: archiveQuiz,
+      onSuccess: (newQuiz) => {
+        setArchiveQuiz((prev) => [...prev, newQuiz._id]);
+        setQuiz(newQuiz);
+        updateRoomData({
+          roomId: data?._id,
+          newData: {
+            currentQuiz: newQuiz._id,
+            participants: clearParticipantsAnswer(),
+          },
+        });
+      },
+    });
+  };
+
+  const handleRevealAnswer = () => {
+    revealQuiz({
+      id: quiz?._id,
+      onSuccess: ({ answer }) => {
+        setAnswer(answer);
+        updateRoomData({
+          roomId: data?._id,
+          newData: { answer, participants: validateParticipantsAnswer(answer) },
+          onSuccess: (data) => {
+            setRoomData(data);
+          },
+        });
+      },
+    });
+  };
+
+  const handleGameStart = () => {
+    updateRoomData({
+      roomId: data?._id,
+      newData: { started: true },
+      onSuccess: () => {
+        handleNewQuiz();
+        socket.emit(GAME_TOPIC, {startGame: true})
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (data?.currentQuiz) {
+      setQuiz(data.currentQuiz);
+    }
+    if (data?.archiveQuiz) {
+      setArchiveQuiz(data.archiveQuiz);
+    }
+    if (data?.started !== started) {
+      setStarted(data?.started);
+    }
+    if (data?.answer !== answer) {
+      setAnswer(data.answer);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   useEffect(() => {
     socket.on(GAME_TOPIC, (data) => {
@@ -31,10 +98,13 @@ const CreatorView = () => {
 
   return (
     <div>
-      <PlayerList players={players}/>
-      <StartGame />
+      <PlayerList players={data?.participants} />
+      <StartGame disabled={started} onClick={handleGameStart} />
       {/* Choices component etc */}
-      <NextQuestion/>
+      <NextQuestion
+        handleNextQuestion={handleNewQuiz}
+        handleRevealAnswer={handleRevealAnswer}
+      />
     </div>
   );
 };

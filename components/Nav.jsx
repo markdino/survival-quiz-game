@@ -2,21 +2,22 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import { useContext, useEffect, useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 import brandLogo from "@public/assets/brand.png"
+import UserContext from "@store/UserContext";
 
 const Nav = () => {
   const { data: session } = useSession();
+  const { isLoggedIn, checkLoggedUser, user } =useContext(UserContext)
 
-  const [providers, setProviders] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      const res = await getProviders();
-      setProviders(res);
-    })();
-  }, []);
+  const handleSignOut = () => {
+    if (session?.user){
+      signOut()
+    }
+    localStorage.removeItem('user')
+    checkLoggedUser()
+  }
 
   return (
     <nav className="flex justify-between w-full mb-16 pt-3 px-5">
@@ -31,42 +32,36 @@ const Nav = () => {
       </Link>
 
       <div>
-        {session?.user ? (
+        {isLoggedIn ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/room" className="black_btn">
               Create Room
             </Link>
 
-            <button type="button" onClick={signOut} className="outline_btn">
+            <button type="button" onClick={handleSignOut} className="outline_btn">
               Sign Out
             </button>
 
             <Link href="/profile">
-              <Image
-                src={session?.user.image}
-                width={37}
-                height={37}
-                className="rounded-full"
-                alt="profile"
-              />
+              {user?.image ? (
+                <Image
+                  src={user.image}
+                  width={37}
+                  height={37}
+                  className="rounded-full"
+                  alt="profile"
+                />
+              ):(
+                <section className="w-9 h-9 rounded-full flex justify-center items-center bg-yellow-400">
+                  <span className="text-white">{user.username.charAt(0).toUpperCase()}</span>
+                </section>
+              )}
             </Link>
           </div>
         ) : (
-          <>
-            {providers &&
-              Object.values(providers).map((provider) => (
-                <button
-                  type="button"
-                  key={provider.name}
-                  onClick={() => {
-                    signIn(provider.id);
-                  }}
-                  className="black_btn"
-                >
-                  Sign in
-                </button>
-              ))}
-          </>
+          <Link href="/signin" className="black_btn">
+              Sign In
+            </Link>
         )}
       </div>
     </nav>
