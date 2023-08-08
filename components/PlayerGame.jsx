@@ -9,14 +9,13 @@ const selectedChoiceStyle = "border-4 rounded-md border-yellow-400 bg-yellow-500
 const correctChoiceStyle = "border-4 rounded-md border-green-500 bg-green-500 my-4 mx-48 py-4 text-xl";
 const wrongChoiceStyle = "border-4 rounded-md border-red-500 bg-red-500 my-4 mx-48 py-4 text-xl";
 
-const PlayerGame = ({
-  currentQuiz,
-}) => {
+const PlayerGame = ({ currentQuiz }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [disableSelect, setDisableSelect] = useState(true);
   const [startTimer, setStartTimer] = useState(false);
-  const [answer, setAnswer] = useState("")
-  const [checkAnswer, setCheckAnswer] = useState(false)
+  const [answer, setAnswer] = useState("");
+  const [checkAnswer, setCheckAnswer] = useState(false);
+  const [revealChoice, setRevealChoice] = useState(false);
 
   const { question, choices } = currentQuiz;
 
@@ -35,11 +34,11 @@ const PlayerGame = ({
 
   // Select answer interaction logic
   const handleSelectAnswer = (index) => {
-      if (disableSelect) return;
-      if (index === selectedAnswer) {
-          setSelectedAnswer(null);
-          return;
-        }
+    if (disableSelect) return;
+    if (index === selectedAnswer) {
+      setSelectedAnswer(null);
+      return;
+    }
     socket.emit(GAME_TOPIC, { creatorRequestFetch: true });
     setSelectedAnswer(index);
   };
@@ -63,8 +62,8 @@ const PlayerGame = ({
       setTimeout(() => {
         alert("Time's Up!");
         setDisableSelect(true);
-        setStartTimer(false)
-        socket.emit(GAME_TOPIC, { startTimer: false })
+        setStartTimer(false);
+        socket.emit(GAME_TOPIC, { startTimer: false });
       }, COUNTDOWN_TIME);
     }
   }, [startTimer]);
@@ -72,28 +71,33 @@ const PlayerGame = ({
   // Elimination handler
   useEffect(() => {
     if (checkAnswer && choices[selectedAnswer] !== answer) {
-      console.log("Player eliminated!")
+      console.log("Player eliminated!");
     }
   }, [checkAnswer]);
 
-//   Listen to socket
-  useEffect(()=> {
-    socket.on(GAME_TOPIC, (data)=> {
-        if(data?.revealAnswer){
-            setAnswer(data?.answer)
-            setCheckAnswer(true)
-        }
+  //   Listen to socket
+  useEffect(() => {
+    socket.on(GAME_TOPIC, (data) => {
+      if (data?.revealAnswer) {
+        setAnswer(data?.answer);
+        setCheckAnswer(true);
+      }
 
-        if (data?.newQuiz) {
-            setAnswer("")
-            setCheckAnswer(false)
-        }
+      if (data?.newQuiz) {
+        setAnswer("");
+        setCheckAnswer(false);
+        setRevealChoice(false)
+      }
 
-        if (data?.startTimer){
-            setStartTimer(true)
-        }
-    })
-  }, [socket])
+      if (data?.startTimer) {
+        setStartTimer(true);
+      }
+
+      if (data?.renderChoice) {
+        setRevealChoice(true)
+      }
+    });
+  }, [socket]);
 
   return (
     <section
@@ -111,11 +115,13 @@ const PlayerGame = ({
         <h3 className="text-3xl my-4">Question</h3>
         <p className="text-2xl my-4 w-screen prevent_select">{question}</p>
         <div className="flex justify-center items-center text-center my-16">
-          <ul className="w-1/2">
-            {choices.map((choice) =>
-              renderChoice(choice, choices.indexOf(choice))
-            )}
-          </ul>
+          {revealChoice && (
+            <ul className="w-1/2">
+              {choices.map((choice) =>
+                renderChoice(choice, choices.indexOf(choice))
+              )}
+            </ul>
+          )}
         </div>
       </div>
     </section>
