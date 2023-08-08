@@ -14,6 +14,7 @@ const CreatorView = ({ data }) => {
   const [started, setStarted] = useState(false);
   const [answer, setAnswer] = useState("");
   const [timerStarted, setTimerStarted] = useState(false)
+  const [revealChoice, setRevealChoice] = useState(false)
 
   const socket = useContext(SocketContext);
   const { setRequestFetch } = useContext(UserContext);
@@ -52,6 +53,7 @@ const CreatorView = ({ data }) => {
           },
           onSuccess: () => {
             setRequestFetch(true)
+            setRevealChoice(false)
             socket.emit(GAME_TOPIC, { playerRequestFetch: true, newQuiz: true });
           },
         });
@@ -89,6 +91,11 @@ const CreatorView = ({ data }) => {
   const handleTimerStart = () => {
     setTimerStarted(true)
     socket.emit(GAME_TOPIC, { startTimer: true })
+  }
+
+  const handleRevealChoice = () => {
+    setRevealChoice(true)
+    socket.emit(GAME_TOPIC, { revealChoice: true })
   }
 
   // Setter on data reload
