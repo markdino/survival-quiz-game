@@ -49,11 +49,9 @@ const RoomPage = () => {
       });
     }
 
-    return () => {
-      updateRoomData({ roomId: roomData?._id, newData: { active: false } })
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestFetch]);
+
   console.log(roomData); //<<************/ Remove this console.log on deploy **********************
   return (
     <SocketContext.Provider value={socket}>
