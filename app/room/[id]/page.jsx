@@ -29,6 +29,7 @@ const RoomPage = () => {
         onSuccess: (data) => {
           if (initialFetch) {
             updateRoomData({roomId: data._id, newData: { active: true }})
+            // document.addEventListener('contextmenu', event => event.preventDefault());
           }
 
           setRoomData(data);
@@ -57,7 +58,7 @@ const RoomPage = () => {
     <SocketContext.Provider value={socket}>
       <section className="container max-w-screen-xl mx-auto">
       <div>Room {params?.id}</div>
-      <Alert text="Loading..." show={isLoading || isChecking} variant="ligth" />
+      <Alert text="Loading..." show={initialFetch && isLoading || isChecking} variant="ligth" />
       <Alert text={error?.message} show={error} variant="danger" />
       {roomData &&
         !isChecking &&
