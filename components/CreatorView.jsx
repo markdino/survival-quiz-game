@@ -7,6 +7,7 @@ import { SocketContext } from "@websocket";
 import { GAME_TOPIC } from "@websocket/topics";
 import { getQuiz, revealQuiz, updateRoomData } from "@services/api";
 import UserContext from "@store/UserContext";
+import RevealChoices from "./RevealChoices";
 
 const CreatorView = ({ data }) => {
   const [quiz, setQuiz] = useState(null);
@@ -133,6 +134,7 @@ const CreatorView = ({ data }) => {
       <PlayerList players={data?.participants} />
       <StartGame disabled={started} onClick={handleGameStart} />
       {/* Choices component etc */}
+      <RevealChoices />
       <NextQuestion
         disabledNext={!data?.started || timerStarted}
         disabledReveal={!data?.started || timerStarted}
