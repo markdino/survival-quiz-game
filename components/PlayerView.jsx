@@ -13,7 +13,6 @@ const answer = "Venus";
 
 const PlayerView = ({ data }) => {
   const [startGame, setStartGame] = useState(false);
-  const [player, setPlayer] = useState("");
   const [playerEliminated, setPlayerEliminated] = useState(false);
   const [showQuestion, setShowQuestion] = useState(true);
   const [showAnswer, setShowAnswer] = useState(false);
@@ -22,7 +21,8 @@ const PlayerView = ({ data }) => {
   const { user, setRequestFetch } = useContext(UserContext);
   const socket = useContext(SocketContext);
 
-  const playerExist = data.participants.some(
+  const { question, choices} = data?.currentQuiz
+  const player = data.participants.find(
     (participant) => participant.user._id === user?.id
   );
 
@@ -44,12 +44,9 @@ const PlayerView = ({ data }) => {
   const handleStartGame = () => {
     return (
       <>
-        {playerExist ? (
+        {player ? (
           <PlayerGame
-            question={question}
-            choices={choices}
-            answer={answer}
-            showQuestion={showQuestion}
+            currentQuiz={data?.currentQuiz}
             startTimer={startTimer}
             checkAnswer={showAnswer}
             eliminatePlayer={setPlayerEliminated}
@@ -64,17 +61,17 @@ const PlayerView = ({ data }) => {
   // Render waiting or player login form
   const handleUnStartGame = () => {
     return (
-      <>{playerExist ? <RenderWait /> : <PlayerLogin roomId={data._id} />}</>
+      <>{player ? <RenderWait /> : <PlayerLogin roomId={data._id} />}</>
     );
   };
 
   useEffect(() => {
-    console.log(`Is player eliminated? ${playerEliminated}`);
-  }, [playerEliminated]);
+    console.log(`Is player eliminated? ${player?.active}`);
+  }, [player]);
 
+  // Listend to socket on data reload
   useEffect(() => {
     socket.on(GAME_TOPIC, (data) => {
-      console.log('Creator', data)
       if (data.playerRequestFetch) {
         setRequestFetch(true)
       }

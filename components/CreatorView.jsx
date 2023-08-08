@@ -8,11 +8,12 @@ import { GAME_TOPIC } from "@websocket/topics";
 import { getQuiz, revealQuiz, updateRoomData } from "@services/api";
 import UserContext from "@store/UserContext";
 
-const CreatorView = ({ data, setRoomData = () => null }) => {
+const CreatorView = ({ data }) => {
   const [quiz, setQuiz] = useState(null);
   const [archiveQuiz, setArchiveQuiz] = useState([]);
   const [started, setStarted] = useState(false);
   const [answer, setAnswer] = useState("");
+  const [timerStarted, setTimerStarted] = useState(false)
 
   const socket = useContext(SocketContext);
   const { setRequestFetch } = useContext(UserContext);
@@ -51,7 +52,7 @@ const CreatorView = ({ data, setRoomData = () => null }) => {
           },
           onSuccess: () => {
             setRequestFetch(true)
-            socket.emit(GAME_TOPIC, { playerRequestFetch: true });
+            socket.emit(GAME_TOPIC, { playerRequestFetch: true, newQuiz: true });
           },
         });
       },
@@ -68,7 +69,7 @@ const CreatorView = ({ data, setRoomData = () => null }) => {
           newData: { answer, participants: validateParticipantsAnswer(answer) },
           onSuccess: (data) => {
             setRequestFetch(true)
-            socket.emit(GAME_TOPIC, { playerRevealAnswer: true });
+            socket.emit(GAME_TOPIC, { revealAnswer: true, answer });
           },
         });
       },
@@ -85,6 +86,12 @@ const CreatorView = ({ data, setRoomData = () => null }) => {
     });
   };
 
+  const handleTimerStart = () => {
+    setTimerStarted(true)
+    socket.emit(GAME_TOPIC, { startTimer: true })
+  }
+
+  // Setter on data reload
   useEffect(() => {
     if (data?.currentQuiz) {
       setQuiz(data.currentQuiz);
@@ -98,12 +105,15 @@ const CreatorView = ({ data, setRoomData = () => null }) => {
     if (data?.answer !== answer) {
       setAnswer(data.answer);
     }
+    if (!data?.startTimer) {
+      setTimerStarted(false)
+    }
 
   }, [data]);
 
+  // Listen to socket
   useEffect(() => {
     socket.on(GAME_TOPIC, (data) => {
-      console.log('Creator', data)
       if (data.creatorRequestFetch) {
         setRequestFetch(true)
       }
@@ -117,8 +127,8 @@ const CreatorView = ({ data, setRoomData = () => null }) => {
       <StartGame disabled={started} onClick={handleGameStart} />
       {/* Choices component etc */}
       <NextQuestion
-        disabledNext={!data?.started}
-        disabledReveal={!data?.started}
+        disabledNext={!data?.started || timerStarted}
+        disabledReveal={!data?.started || timerStarted}
         handleNextQuestion={handleNewQuiz}
         handleRevealAnswer={handleRevealAnswer}
       />
