@@ -8,6 +8,7 @@ import { GAME_TOPIC } from "@websocket/topics";
 import { getQuiz, revealQuiz, updateRoomData } from "@services/api";
 import UserContext from "@store/UserContext";
 import RevealChoices from "./RevealChoices";
+import Choices from "./Choices";
 
 const CreatorView = ({ data }) => {
   const [quiz, setQuiz] = useState(null);
@@ -133,7 +134,13 @@ const CreatorView = ({ data }) => {
     <div>
       <PlayerList players={data?.participants} />
       <StartGame disabled={started} onClick={handleGameStart} />
-      {/* Choices component etc */}
+      <Choices 
+        revealChoices={true}
+        revealAnswer={false}
+        question={"Who is the Father of the Atomic Bomb?"}
+        choices={["Albert Einstein", "Lewis Strauss", "Robert Oppenheimer", "Leslie Groves"]}
+        players={["Player_A","Player_B","Player_C","Player_D","Player_E"]}
+        />
       <RevealChoices />
       <NextQuestion
         disabledNext={!data?.started || timerStarted}
