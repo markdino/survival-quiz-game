@@ -3,13 +3,14 @@ import LoginForm from "./LoginForm";
 import UserContext from "@store/UserContext";
 import { joinRoom } from "@services/api";
 import { SocketContext } from "@websocket";
+import { GAME_TOPIC } from "@websocket/topics";
 
 const PlayerLogin = ({ roomId }) => {
   //   const [playerReady, setPlayerReady] = useState(false);
 
   const { isLoggedIn, setRequestFetch, user, isChecking } =
     useContext(UserContext);
-    const socket = useContext(SocketContext);
+  const socket = useContext(SocketContext);
 
   return (
     <section className="flex items-center justify-center m-24 py-24 absolute top-0">
@@ -23,7 +24,7 @@ const PlayerLogin = ({ roomId }) => {
               userId: user._id,
               onSuccess: () => {
                 setRequestFetch(true);
-                socket.emit(GAME_TOPIC, { creatorRequestFetch: true})
+                socket.emit(GAME_TOPIC, { creatorRequestFetch: true });
               },
               onFailed: (error) => {
                 console.log({ error });
@@ -38,7 +39,7 @@ const PlayerLogin = ({ roomId }) => {
           userId: user?.id,
           onSuccess: () => {
             setRequestFetch(true);
-            socket.emit(GAME_TOPIC, { creatorRequestFetch: true})
+            socket.emit(GAME_TOPIC, { creatorRequestFetch: true });
           },
           onFailed: (error) => {
             console.log({ error });
