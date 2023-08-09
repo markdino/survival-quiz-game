@@ -45,7 +45,7 @@ const PlayerGame = ({ currentQuiz }) => {
 
   // Choices color handling if answers are shown
   const handleChoiceStyles = (text, index) => {
-    if (disableSelect) return disableStyle;
+    if (!revealChoice && disableSelect) return disableStyle;
 
     if (checkAnswer) {
       if (selectedAnswer === index && answer !== text) return wrongChoiceStyle;
