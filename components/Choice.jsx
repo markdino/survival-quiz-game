@@ -6,7 +6,7 @@ const wrongChoiceStyle = "border-4 rounded-md border-black border-red-500 bg-red
 const Choice = ({choice, correctAnswer, players, revealAnswer}) => {
     const renderPlayers = (players) => {
         return (revealAnswer && !correctAnswer) ? (
-            <div classname="mt-4">
+            <div className="mt-4">
                 <span className="text-md bg-red-500 p-2 rounded-md">Players Out!</span>
             </div>
         ) : (
