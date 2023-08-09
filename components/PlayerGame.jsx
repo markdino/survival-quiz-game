@@ -1,13 +1,20 @@
+import { submitAnswer } from "@services/api";
+import UserContext from "@store/UserContext";
 import { SocketContext } from "@websocket";
 import { GAME_TOPIC } from "@websocket/topics";
 import { useState, useEffect, useContext } from "react";
 
 const COUNTDOWN_TIME = 5000; // 5 secs timer
-const disableStyle = "border-4 rounded-md border-gray my-4 mx-48 py-4 text-xl text-gray-500";
-const choiceStyle = "border-4 rounded-md border-black my-4 mx-48 py-4 text-xl hover:border-yellow-400";
-const selectedChoiceStyle = "border-4 rounded-md border-yellow-400 bg-yellow-500 my-4 mx-48 py-4 text-xl";
-const correctChoiceStyle = "border-4 rounded-md border-green-500 bg-green-500 my-4 mx-48 py-4 text-xl";
-const wrongChoiceStyle = "border-4 rounded-md border-red-500 bg-red-500 my-4 mx-48 py-4 text-xl";
+const disableStyle =
+  "border-4 rounded-md border-gray my-4 mx-48 py-4 text-xl text-gray-500";
+const choiceStyle =
+  "border-4 rounded-md border-black my-4 mx-48 py-4 text-xl hover:border-yellow-400";
+const selectedChoiceStyle =
+  "border-4 rounded-md border-yellow-400 bg-yellow-500 my-4 mx-48 py-4 text-xl";
+const correctChoiceStyle =
+  "border-4 rounded-md border-green-500 bg-green-500 my-4 mx-48 py-4 text-xl";
+const wrongChoiceStyle =
+  "border-4 rounded-md border-red-500 bg-red-500 my-4 mx-48 py-4 text-xl";
 
 const PlayerGame = ({ currentQuiz }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -20,6 +27,7 @@ const PlayerGame = ({ currentQuiz }) => {
   const { question, choices } = currentQuiz;
 
   const socket = useContext(SocketContext);
+  const { user } = useContext(UserContext);
 
   // Choice component
   const renderChoice = (text, index) => (
@@ -39,13 +47,12 @@ const PlayerGame = ({ currentQuiz }) => {
       setSelectedAnswer(null);
       return;
     }
-    socket.emit(GAME_TOPIC, { creatorRequestFetch: true });
     setSelectedAnswer(index);
   };
 
   // Choices color handling if answers are shown
   const handleChoiceStyles = (text, index) => {
-    if (disableSelect) return disableStyle;
+    if (!revealChoice && disableSelect) return disableStyle;
 
     if (checkAnswer) {
       if (selectedAnswer === index && answer !== text) return wrongChoiceStyle;
@@ -75,6 +82,20 @@ const PlayerGame = ({ currentQuiz }) => {
     }
   }, [checkAnswer]);
 
+  // Submit selected answer
+  useEffect(() => {
+    if (selectedAnswer) {
+      submitAnswer({
+        roomId: data?._id,
+        userId: user.id,
+        answer: selectedAnswer,
+        onSuccess: () => {
+          socket.emit(GAME_TOPIC, { creatorRequestFetch: true });
+        },
+      });
+    }
+  }, [selectedAnswer]);
+
   //   Listen to socket
   useEffect(() => {
     socket.on(GAME_TOPIC, (data) => {
@@ -86,7 +107,8 @@ const PlayerGame = ({ currentQuiz }) => {
       if (data?.newQuiz) {
         setAnswer("");
         setCheckAnswer(false);
-        setRevealChoice(false)
+        setRevealChoice(false);
+        setSelectedAnswer(null)
       }
 
       if (data?.startTimer) {
@@ -94,7 +116,7 @@ const PlayerGame = ({ currentQuiz }) => {
       }
 
       if (data?.renderChoice) {
-        setRevealChoice(true)
+        setRevealChoice(true);
       }
     });
   }, [socket]);

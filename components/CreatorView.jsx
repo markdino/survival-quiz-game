@@ -8,15 +8,15 @@ import { GAME_TOPIC } from "@websocket/topics";
 import { getQuiz, revealQuiz, updateRoomData } from "@services/api";
 import UserContext from "@store/UserContext";
 import RevealChoices from "./RevealChoices";
-import Choices from "./Choices";
+import Quiz from "./Quiz";
 
 const CreatorView = ({ data }) => {
   const [quiz, setQuiz] = useState(null);
   const [archiveQuiz, setArchiveQuiz] = useState([]);
   const [started, setStarted] = useState(false);
   const [answer, setAnswer] = useState("");
-  const [timerStarted, setTimerStarted] = useState(false)
-  const [revealChoice, setRevealChoice] = useState(false)
+  const [timerStarted, setTimerStarted] = useState(false);
+  const [revealChoice, setRevealChoice] = useState(false);
 
   const socket = useContext(SocketContext);
   const { setRequestFetch } = useContext(UserContext);
@@ -24,7 +24,7 @@ const CreatorView = ({ data }) => {
   const clearParticipantsAnswer = () => {
     const clearedParticipants = data?.participants.map((participant) => {
       participant.answer = "";
-      return participant
+      return participant;
     });
     return clearedParticipants;
   };
@@ -54,9 +54,12 @@ const CreatorView = ({ data }) => {
             archivedQuiz: archiveQuiz,
           },
           onSuccess: () => {
-            setRequestFetch(true)
-            setRevealChoice(false)
-            socket.emit(GAME_TOPIC, { playerRequestFetch: true, newQuiz: true });
+            setRequestFetch(true);
+            setRevealChoice(false);
+            socket.emit(GAME_TOPIC, {
+              playerRequestFetch: true,
+              newQuiz: true,
+            });
           },
         });
       },
@@ -72,7 +75,7 @@ const CreatorView = ({ data }) => {
           roomId: data?._id,
           newData: { answer, participants: validateParticipantsAnswer(answer) },
           onSuccess: (data) => {
-            setRequestFetch(true)
+            setRequestFetch(true);
             socket.emit(GAME_TOPIC, { revealAnswer: true, answer });
           },
         });
@@ -91,14 +94,14 @@ const CreatorView = ({ data }) => {
   };
 
   const handleTimerStart = () => {
-    setTimerStarted(true)
-    socket.emit(GAME_TOPIC, { startTimer: true })
-  }
+    setTimerStarted(true);
+    socket.emit(GAME_TOPIC, { startTimer: true });
+  };
 
   const handleRevealChoice = () => {
-    setRevealChoice(true)
-    socket.emit(GAME_TOPIC, { revealChoice: true })
-  }
+    setRevealChoice(true);
+    socket.emit(GAME_TOPIC, { revealChoice: true });
+  };
 
   // Setter on data reload
   useEffect(() => {
@@ -115,36 +118,46 @@ const CreatorView = ({ data }) => {
       setAnswer(data.answer);
     }
     if (!data?.startTimer) {
-      setTimerStarted(false)
+      setTimerStarted(false);
     }
-
   }, [data]);
 
   // Listen to socket
   useEffect(() => {
     socket.on(GAME_TOPIC, (data) => {
       if (data.creatorRequestFetch) {
-        setRequestFetch(true)
+        setRequestFetch(true);
       }
     });
-    
   }, [socket]);
 
   return (
     <div>
       <PlayerList players={data?.participants} />
       <StartGame disabled={started} onClick={handleGameStart} />
-      <Choices 
-        revealChoices={true}
-        revealAnswer={false}
-        question={"Who is the Father of the Atomic Bomb?"}
-        choices={["Albert Einstein", "Lewis Strauss", "Robert Oppenheimer", "Leslie Groves"]}
-        players={["Player_A","Player_B","Player_C","Player_D","Player_E"]}
-        />
-      <RevealChoices />
+      <Quiz
+        revealChoices={revealChoice}
+        revealAnswer={answer}
+        quiz={data?.currentQuiz}
+        // question={"Who is the Father of the Atomic Bomb?"}
+        // choices={[
+        //   "Albert Einstein",
+        //   "Lewis Strauss",
+        //   "Robert Oppenheimer",
+        //   "Leslie Groves",
+        // ]}
+        // players={["Player_A", "Player_B", "Player_C", "Player_D", "Player_E"]}
+        players={data?.participants}
+      />
+      <RevealChoices
+        onClickRevealChoice={handleRevealChoice}
+        onClickStartTimer={handleTimerStart}
+        disabledRevealChoice={!data?.started || revealChoice}
+        disabledStartTimer={!data?.started || timerStarted}
+      />
       <NextQuestion
         disabledNext={!data?.started || timerStarted}
-        disabledReveal={!data?.started || timerStarted}
+        disabledReveal={!data?.started || timerStarted || data?.answer}
         handleNextQuestion={handleNewQuiz}
         handleRevealAnswer={handleRevealAnswer}
       />
