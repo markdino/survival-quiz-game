@@ -132,7 +132,7 @@ const CreatorView = ({ data }) => {
   }, [socket]);
 
   return (
-    <div>
+    <div className="flex items-center justify-center">
       <PlayerList players={data?.participants} />
       <StartGame disabled={started} onClick={handleGameStart} />
       <Quiz

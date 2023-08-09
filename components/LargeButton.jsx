@@ -5,7 +5,7 @@ const LargeButton = ({ children, disabled, onClick }) => {
     <button
       onClick={onClick}
       className={classNames(
-        "px-16 py-8 ml-2 text-3xl rounded-lg",
+        "px-8 py-4 ml-2 text-2xl rounded-lg",
         disabled ? "bg-gray-200 text-gray-500" : "bg-yellow-400"
       )}
       disabled={disabled}

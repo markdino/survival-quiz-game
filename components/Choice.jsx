@@ -1,7 +1,7 @@
 import React from 'react'
 
-const choiceStyle = "border-2 rounded-md border-black my-4 mx-48 p-2 text-xl";
-const wrongChoiceStyle = "border-4 rounded-md border-black border-red-500 bg-red-500 my-4 mx-48 p-2 text-xl";
+const choiceStyle = "w-full flex justify-center border-2 rounded-md border-black my-4 p-2 text-md";
+const wrongChoiceStyle = "w-full flex justify-center border-4 rounded-md border-black border-red-500 bg-red-500 my-4 p-2 text-md";
 
 const Choice = ({choice, correctAnswer, players, revealAnswer}) => {
     const renderPlayers = (players) => {
@@ -18,7 +18,7 @@ const Choice = ({choice, correctAnswer, players, revealAnswer}) => {
 
 
   return (
-    <div className="flex flex-col justify-center items-center m-8 w-36 h-36">
+    <div className="flex flex-col justify-center items-center">
         <div className={(revealAnswer && !correctAnswer) ? wrongChoiceStyle : choiceStyle}>
             <span>{choice}</span>
         </div>

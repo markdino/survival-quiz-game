@@ -115,7 +115,7 @@ const PlayerGame = ({ currentQuiz }) => {
         setStartTimer(true);
       }
 
-      if (data?.renderChoice) {
+      if (data?.revealChoice) {
         setRevealChoice(true);
       }
     });
