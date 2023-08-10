@@ -16,12 +16,11 @@ const correctChoiceStyle =
 const wrongChoiceStyle =
   "border-4 rounded-md border-red-500 bg-red-500 my-4 mx-48 py-4 text-xl";
 
-const PlayerGame = ({ currentQuiz }) => {
+const PlayerGame = ({ currentQuiz, roomId }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [disableSelect, setDisableSelect] = useState(true);
   const [startTimer, setStartTimer] = useState(false);
   const [answer, setAnswer] = useState("");
-  const [checkAnswer, setCheckAnswer] = useState(false);
   const [revealChoice, setRevealChoice] = useState(false);
 
   const { question, choices } = currentQuiz;
@@ -34,32 +33,32 @@ const PlayerGame = ({ currentQuiz }) => {
     <li
       key={text}
       className={handleChoiceStyles(text, index)}
-      onClick={() => handleSelectAnswer(index)}
+      onClick={() => handleSelectAnswer(text)}
     >
       {text}
     </li>
   );
 
   // Select answer interaction logic
-  const handleSelectAnswer = (index) => {
+  const handleSelectAnswer = (text) => {
     if (disableSelect) return;
-    if (index === selectedAnswer) {
-      setSelectedAnswer(null);
-      return;
-    }
-    setSelectedAnswer(index);
+    // if (text === selectedAnswer) {
+    //   setSelectedAnswer(null);
+    //   return;
+    // }
+    setSelectedAnswer(text);
   };
 
   // Choices color handling if answers are shown
   const handleChoiceStyles = (text, index) => {
-    if (!revealChoice && disableSelect) return disableStyle;
+    if (!selectedAnswer && disableSelect) return disableStyle;
 
-    if (checkAnswer) {
-      if (selectedAnswer === index && answer !== text) return wrongChoiceStyle;
+    if (answer) {
+      if (selectedAnswer === text && answer !== text) return wrongChoiceStyle;
       if (answer === text) return correctChoiceStyle;
-      return choiceStyle;
+      return choiceStyle
     }
-    return index === selectedAnswer ? selectedChoiceStyle : choiceStyle;
+    return text === selectedAnswer ? selectedChoiceStyle : choiceStyle;
   };
 
   // Timer handler
@@ -67,26 +66,19 @@ const PlayerGame = ({ currentQuiz }) => {
     if (startTimer) {
       setDisableSelect(false);
       setTimeout(() => {
-        alert("Time's Up!");
-        setDisableSelect(true);
-        setStartTimer(false);
-        socket.emit(GAME_TOPIC, { startTimer: false });
+          socket.emit(GAME_TOPIC, { stopTimer: true });
+          setDisableSelect(true);
+          setStartTimer(false);
+          alert("Time's Up!");
       }, COUNTDOWN_TIME);
     }
   }, [startTimer]);
-
-  // Elimination handler
-  useEffect(() => {
-    if (checkAnswer && choices[selectedAnswer] !== answer) {
-      console.log("Player eliminated!");
-    }
-  }, [checkAnswer]);
 
   // Submit selected answer
   useEffect(() => {
     if (selectedAnswer) {
       submitAnswer({
-        roomId: data?._id,
+        roomId: roomId,
         userId: user.id,
         answer: selectedAnswer,
         onSuccess: () => {
@@ -94,6 +86,7 @@ const PlayerGame = ({ currentQuiz }) => {
         },
       });
     }
+    console.log({selectedAnswer})
   }, [selectedAnswer]);
 
   //   Listen to socket
@@ -101,12 +94,10 @@ const PlayerGame = ({ currentQuiz }) => {
     socket.on(GAME_TOPIC, (data) => {
       if (data?.revealAnswer) {
         setAnswer(data?.answer);
-        setCheckAnswer(true);
       }
 
       if (data?.newQuiz) {
         setAnswer("");
-        setCheckAnswer(false);
         setRevealChoice(false);
         setSelectedAnswer(null)
       }

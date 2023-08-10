@@ -34,9 +34,16 @@ const PlayerView = ({ data }) => {
   );
 
   // Game started component
-  const RenderGameStarted = () => (
-    <div className="h-72 w-72 rounded-full bg-yellow-400 flex justify-center items-center">
+  const GateKeeper = () => (
+    <div className="h-72 w-72 rounded-full bg-gray-400 text-gray-900 flex justify-center items-center">
       <span className="text-xl text-center">The game has already started!</span>
+    </div>
+  );
+
+  // Game over component
+  const GameOver = () => (
+    <div className="h-72 w-72 rounded-full bg-red-300 text-red-950 flex justify-center items-center">
+      <span className="text-xl text-center">Sorry! You are eliminated</span>
     </div>
   );
 
@@ -45,14 +52,16 @@ const PlayerView = ({ data }) => {
     return (
       <>
         {player ? (
-          <PlayerGame
-            currentQuiz={data?.currentQuiz}
-            startTimer={startTimer}
-            checkAnswer={showAnswer}
-            eliminatePlayer={setPlayerEliminated}
-          />
+          player.active ? (
+            <PlayerGame
+              currentQuiz={data?.currentQuiz}
+              roomId={data?._id}
+            />
+          ): (
+            <GameOver />
+          )
         ) : (
-          <RenderGameStarted />
+          <GateKeeper />
         )}
       </>
     );
@@ -64,10 +73,6 @@ const PlayerView = ({ data }) => {
       <>{player ? <RenderWait /> : <PlayerLogin roomId={data._id} />}</>
     );
   };
-
-  useEffect(() => {
-    console.log(`Is player eliminated? ${player?.active}`);
-  }, [player]);
 
   // Listend to socket on data reload
   useEffect(() => {

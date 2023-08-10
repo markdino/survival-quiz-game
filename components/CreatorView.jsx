@@ -117,16 +117,16 @@ const CreatorView = ({ data }) => {
     if (data?.answer !== answer) {
       setAnswer(data.answer);
     }
-    if (!data?.startTimer) {
-      setTimerStarted(false);
-    }
   }, [data]);
-
+  
   // Listen to socket
   useEffect(() => {
     socket.on(GAME_TOPIC, (data) => {
       if (data.creatorRequestFetch) {
         setRequestFetch(true);
+      }
+      if (data.stopTimer) {
+        setTimerStarted(false);
       }
     });
   }, [socket]);
@@ -137,16 +137,8 @@ const CreatorView = ({ data }) => {
       <StartGame disabled={started} onClick={handleGameStart} />
       <Quiz
         revealChoices={revealChoice}
-        revealAnswer={answer}
+        answer={answer}
         quiz={data?.currentQuiz}
-        // question={"Who is the Father of the Atomic Bomb?"}
-        // choices={[
-        //   "Albert Einstein",
-        //   "Lewis Strauss",
-        //   "Robert Oppenheimer",
-        //   "Leslie Groves",
-        // ]}
-        // players={["Player_A", "Player_B", "Player_C", "Player_D", "Player_E"]}
         players={data?.participants}
       />
       <RevealChoices
