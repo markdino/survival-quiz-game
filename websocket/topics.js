@@ -1,0 +1,1 @@
+export const GAME_TOPIC = "game_status_topic"
