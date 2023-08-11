@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 const SignInPage = () => {
-  const { isLoggedIn, checkLoggedUser, user } = useContext(UserContext);
+  const { isLoggedIn, checkLoggedUser, user, isChecking } = useContext(UserContext);
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect")
@@ -20,12 +20,12 @@ const SignInPage = () => {
 
   useEffect(() => {
     console.log({isLoggedIn, user })
-    if (isLoggedIn) {
+    if (!isChecking && isLoggedIn) {
         goRedirect()
     }
     
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn]);
+  }, [isLoggedIn, isChecking]);
 
   return (
     <section className="main">
