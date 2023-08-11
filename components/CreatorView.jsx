@@ -40,6 +40,31 @@ const CreatorView = ({ data }) => {
     return validatedParticipants;
   };
 
+  const getMostSelectedAnswer = (callback) => {
+    const activePlayers = data?.participants.filter((player) => player.active);
+    const answerCount = {};
+
+    activePlayers.forEach((player) => {
+      if (answerCount[player.answer]) {
+        answerCount[player.answer]++;
+      } else {
+        answerCount[player.answer] = 1;
+      }
+    });
+
+    let mostSelectedAnswer = null;
+    let count = 0;
+
+    for (const answer in answerCount) {
+      if (answerCount[answer] > count) {
+        count = answerCount[answer];
+        mostSelectedAnswer = answer;
+      }
+    }
+
+    callback(mostSelectedAnswer, count);
+  };
+
   const handleNewQuiz = () => {
     getQuiz({
       exclude: archiveQuiz,
@@ -67,20 +92,42 @@ const CreatorView = ({ data }) => {
   };
 
   const handleRevealAnswer = () => {
-    revealQuiz({
-      id: quiz?._id,
-      onSuccess: ({ answer }) => {
-        setAnswer(answer);
+    if (data?.currentQuiz.type === "poll") {
+      getMostSelectedAnswer((mostSelectedAnswer) => {
         updateRoomData({
           roomId: data?._id,
-          newData: { answer, participants: validateParticipantsAnswer(answer) },
-          onSuccess: (data) => {
+          newData: {
+            answer: mostSelectedAnswer,
+            participants: validateParticipantsAnswer(mostSelectedAnswer),
+          },
+          onSuccess: () => {
             setRequestFetch(true);
-            socket.emit(GAME_TOPIC, { revealAnswer: true, answer });
+            socket.emit(GAME_TOPIC, {
+              revealAnswer: true,
+              answer: mostSelectedAnswer,
+            });
           },
         });
-      },
-    });
+      });
+    } else {
+      revealQuiz({
+        id: quiz?._id,
+        onSuccess: ({ answer }) => {
+          setAnswer(answer);
+          updateRoomData({
+            roomId: data?._id,
+            newData: {
+              answer,
+              participants: validateParticipantsAnswer(answer),
+            },
+            onSuccess: () => {
+              setRequestFetch(true);
+              socket.emit(GAME_TOPIC, { revealAnswer: true, answer });
+            },
+          });
+        },
+      });
+    }
   };
 
   const handleGameStart = () => {
@@ -118,7 +165,7 @@ const CreatorView = ({ data }) => {
       setAnswer(data.answer);
     }
   }, [data]);
-  
+
   // Listen to socket
   useEffect(() => {
     socket.on(GAME_TOPIC, (data) => {

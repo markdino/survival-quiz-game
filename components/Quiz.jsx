@@ -19,7 +19,7 @@ const Quiz = ({ revealChoices, players, answer, quiz }) => {
           border-4 rounded-md border-black"
       >
         <div className="w-full flex flex-col justify-between items-between">
-          <span className="my-4 ml-4 mr-16 w-full text-xl absolute top-0">
+          <span className="my-8 ml-4 mr-16 w-full text-xl absolute top-0 text-center">
             {question}
           </span>
           <div className="w-full h-3/4 flex justify-between absolute mb-8 bottom-0">
