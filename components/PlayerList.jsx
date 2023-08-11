@@ -24,11 +24,11 @@ const PlayerList = ({ players }) => {
   return (
     <section
       className="flex flex-col items-center justify-center 
-        w-1/4 h-1/2 mt-16 mx-8 py-24 absolute top-0 left-0
+        w-1/4 h-1/2 mt-16 mx-8 py-8 absolute top-0 left-0
         border-4 rounded-md border-black"
     >
       <h3 className="my-16 text-2xl absolute top-0">List of Players: </h3>
-      <ul className="w-full p-8 my-4 overflow-auto">
+      <ul className="w-full px-8 py-4 mt-16 overflow-auto">
         {players.map((player) => (
           <PlayerName
             key={player._id}
