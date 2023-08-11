@@ -31,7 +31,7 @@ const SignInPage = () => {
 
   return (
     <section className="main">
-      {!isChecking ? (
+      {isChecking ? (
         <Alert show={isChecking} text="Checking user..." variant="light" />
       ) : (
         <LoginForm
