@@ -74,6 +74,7 @@ const CreatorView = ({ data }) => {
         updateRoomData({
           roomId: data?._id,
           newData: {
+            answer: "",
             currentQuiz: newQuiz._id,
             participants: clearParticipantsAnswer(),
             archivedQuiz: archiveQuiz,
