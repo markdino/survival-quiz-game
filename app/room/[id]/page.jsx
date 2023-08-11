@@ -57,7 +57,7 @@ const RoomPage = () => {
   return (
     <SocketContext.Provider value={socket}>
       <section className="container max-w-screen-xl mx-auto">
-      <div>Room {params?.id}</div>
+      {/* <div>Room {params?.id}</div> */}
       <Alert text="Loading..." show={initialFetch && isLoading || isChecking} variant="ligth" />
       <Alert text={error?.message} show={error} variant="danger" />
       {roomData &&
