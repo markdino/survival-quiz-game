@@ -20,7 +20,7 @@ const Choice = ({ choice, players, answer }) => {
         <span>{choice}</span>
       </div>
       <div className="mt-2 h-24">
-        <ul className="overflow-auto">
+        <ul className="overflow-auto max-h-24 px-4">
           {players?.map((player) => (
                 <li key={player._id}>{player.user.username}</li>
               ))}
