@@ -9,7 +9,7 @@ const CreateRoomPage = () => {
   const [field, setField] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { isLoggedIn, user } = useContext(UserContext);
+  const { isLoggedIn, user, isChecking } = useContext(UserContext);
   const router = useRouter();
 
   const handleClick = () => {
@@ -33,38 +33,44 @@ const CreateRoomPage = () => {
   };
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isChecking && !isLoggedIn) {
       router.push("/signin?redirect=/room");
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
-  console.log({error})
+  console.log({ error });
   return (
     <main className="main flex-col gap-10">
-      <h1 className="text-4xl font-bold text-center">Create Room</h1>
-      <div className="mx-auto container max-w-md">
-        <label className="w_inherit w_font-satoshi font-semibold text-base text-gray-700 text-center flex flex-col">
-          Create a room for your quiz environment
-          <div className="flex flex-col gap-3">
-            <input
-              value={field}
-              onChange={(e) => setField(e.target.value)}
-              type="text"
-              placeholder="Room name"
-              className="form_input w-full border"
-            />
-            <Alert text="Loading..." show={isLoading} variant="light" />
-            <Alert text={error?.message} show={error} variant="danger" />
-            <button
-              onClick={handleClick}
-              className="px-5 py-3 text-sm w-full bg-yellow-400 rounded-lg text-white"
-            >
-              Create
-            </button>
+      {isChecking ? (
+        <Alert text="Checking user..." show={isChecking} variant="light" />
+      ) : (
+        <>
+          <h1 className="text-4xl font-bold text-center">Create Room</h1>
+          <div className="mx-auto container max-w-md">
+            <label className="w_inherit w_font-satoshi font-semibold text-base text-gray-700 text-center flex flex-col">
+              Create a room for your quiz environment
+              <div className="flex flex-col gap-3">
+                <input
+                  value={field}
+                  onChange={(e) => setField(e.target.value)}
+                  type="text"
+                  placeholder="Room name"
+                  className="form_input w-full border"
+                />
+                <Alert text="Loading..." show={isLoading} variant="light" />
+                <Alert text={error?.message} show={error} variant="danger" />
+                <button
+                  onClick={handleClick}
+                  className="px-5 py-3 text-sm w-full bg-yellow-400 rounded-lg text-white"
+                >
+                  Create
+                </button>
+              </div>
+            </label>
           </div>
-        </label>
-      </div>
+        </>
+      )}
     </main>
   );
 };
