@@ -20,7 +20,7 @@ const LoginForm = ({
   const [isLoading, setIsLoading] = useState(false);
   const [providers, setProviders] = useState(null);
 
-  const { checkLoggedUser, setUser, setIsLoggedIn } = useContext(UserContext);
+  const { checkLoggedUser, setUser, setIsLoggedIn, isLoggedIn } = useContext(UserContext);
 
   const handleLogin = () => {
     signInUser({
@@ -70,9 +70,9 @@ const LoginForm = ({
           onClick={handleLogin}
           className={classNames(
             "px-5 ml-2 text-sm rounded-lg text-white bg-yellow-400",
-            { "opacity-50": isLoading }
+            { "opacity-50": isLoading || isLoggedIn }
           )}
-          disabled={isLoading}
+          disabled={isLoading || isLoggedIn}
         >
           Enter
         </button>
