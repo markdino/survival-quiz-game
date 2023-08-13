@@ -24,7 +24,7 @@ const RoomPage = () => {
     setUser,
     setIsLoggedIn,
   } = useContext(UserContext);
-  const localUser = localStorage.getItem("user");
+  const localUser = localStorage.getItem("user")
 
   useEffect(() => {
     if (user && (initialFetch || requestFetch)) {

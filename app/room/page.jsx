@@ -12,7 +12,7 @@ const CreateRoomPage = () => {
   const { isLoggedIn, user, isChecking, setUser, setIsLoggedIn } = useContext(UserContext);
   const router = useRouter();
 
-  const localUser = localStorage.getItem("user");
+  const localUser = localStorage.getItem("user")
 
   const handleClick = () => {
     if (!field) return;
@@ -35,7 +35,7 @@ const CreateRoomPage = () => {
   };
 
   useEffect(()=> {
-    if (localUser) {
+    if (!user && localUser) {
       setUser(JSON.parse(localUser))
       setIsLoggedIn(true)
     }
