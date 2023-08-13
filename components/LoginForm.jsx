@@ -18,6 +18,7 @@ const LoginForm = ({
   const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false)
   const [providers, setProviders] = useState(null);
 
   const { checkLoggedUser, setUser, setIsLoggedIn, isLoggedIn } = useContext(UserContext);
@@ -28,6 +29,7 @@ const LoginForm = ({
       onSubmit: () => {
         setError(null);
         setIsLoading(true);
+        setIsSuccess(false)
         onSubmit();
       },
       onSuccess: (data) => {
@@ -35,12 +37,15 @@ const LoginForm = ({
         // checkLoggedUser();
         setUser(data),
         setIsLoggedIn(true)
+        setIsSuccess(true)
         onSuccess(data);
         setIsLoading(false);
+        setUsername("")
       },
       onFailed: (response) => {
         setError({ message: response.data.error });
         onFailed(response);
+        setIsSuccess(false)
         setIsLoading(false);
       },
     });
@@ -79,6 +84,7 @@ const LoginForm = ({
       </div>
       <Alert text="Loading..." show={isLoading} variant="light" />
       <Alert text={error?.message} show={error} variant="danger" />
+      <Alert show={isSuccess} text="Login success!" variant="success" />
       {providers && (
         <>
           <Divider text="or" />
