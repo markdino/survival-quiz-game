@@ -9,8 +9,10 @@ const CreateRoomPage = () => {
   const [field, setField] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { isLoggedIn, user, isChecking } = useContext(UserContext);
+  const { isLoggedIn, user, isChecking, setUser, setIsLoggedIn } = useContext(UserContext);
   const router = useRouter();
+
+  const localUser = localStorage.getItem("user");
 
   const handleClick = () => {
     if (!field) return;
@@ -32,11 +34,18 @@ const CreateRoomPage = () => {
     });
   };
 
+  useEffect(()=> {
+    if (localUser) {
+      setUser(JSON.parse(localUser))
+      setIsLoggedIn(true)
+    }
+  }, [])
+
   useEffect(() => {
     console.log({isLoggedIn, user})
-    // if (!isChecking && !user) {
-    //   router.push("/signin?redirect=/room");
-    // }
+    if (!isChecking && !user && !localUser) {
+      router.push("/signin?redirect=/room");
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
