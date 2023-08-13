@@ -18,7 +18,7 @@ const PlayerView = ({ data }) => {
   const [showAnswer, setShowAnswer] = useState(false);
   const [startTimer, setStartTimer] = useState(false);
 
-  const { user, setRequestFetch } = useContext(UserContext);
+  const { user, setRequestFetch, checkLoggedUser } = useContext(UserContext);
   const socket = useContext(SocketContext);
 
   // const { question, choices} = data?.currentQuiz
@@ -83,6 +83,12 @@ const PlayerView = ({ data }) => {
     });
     
   }, [socket]);
+
+  useEffect(() => {
+    checkLoggedUser();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="flex items-center justify-center">
