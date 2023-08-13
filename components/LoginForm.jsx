@@ -20,7 +20,7 @@ const LoginForm = ({
   const [isLoading, setIsLoading] = useState(false);
   const [providers, setProviders] = useState(null);
 
-  const { checkLoggedUser } = useContext(UserContext);
+  const { checkLoggedUser, setUser, setIsLoggedIn } = useContext(UserContext);
 
   const handleLogin = () => {
     signInUser({
@@ -32,14 +32,16 @@ const LoginForm = ({
       },
       onSuccess: (data) => {
         localStorage.setItem("user", JSON.stringify(data));
-        setIsLoading(false);
-        checkLoggedUser()
+        // checkLoggedUser();
+        setUser(data),
+        setIsLoggedIn(true)
         onSuccess(data);
+        setIsLoading(false);
       },
       onFailed: (response) => {
         setError({ message: response.data.error });
-        setIsLoading(false);
         onFailed(response);
+        setIsLoading(false);
       },
     });
   };
