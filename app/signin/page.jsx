@@ -37,9 +37,9 @@ const SignInPage = () => {
         <LoginForm
           label="Sign in as Guest"
           placeholder="Guest username"
-          onSuccess={() => {
-            goRedirect();
-          }}
+          // onSuccess={() => {
+          //   goRedirect();
+          // }}
         />
       )}
     </section>

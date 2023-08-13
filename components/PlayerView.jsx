@@ -21,7 +21,7 @@ const PlayerView = ({ data }) => {
   const { user, setRequestFetch } = useContext(UserContext);
   const socket = useContext(SocketContext);
 
-  const { question, choices} = data?.currentQuiz
+  // const { question, choices} = data?.currentQuiz
   const player = data.participants.find(
     (participant) => participant.user._id === user?.id
   );
