@@ -33,12 +33,13 @@ const CreateRoomPage = () => {
   };
 
   useEffect(() => {
-    if (!isChecking && !isLoggedIn) {
-      router.push("/signin?redirect=/room");
-    }
+    console.log({isLoggedIn, user})
+    // if (!isChecking && !user) {
+    //   router.push("/signin?redirect=/room");
+    // }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn]);
+  }, [user]);
   console.log({ error });
   return (
     <main className="main flex-col gap-10">
