@@ -7,6 +7,7 @@ import classNames from "classnames";
 import Alert from "./Alert";
 import { signInUser } from "@services/api";
 import UserContext from "@store/UserContext";
+import Divider2 from "./Divider2";
 
 const LoginForm = ({
   onSubmit = () => null,
@@ -18,9 +19,10 @@ const LoginForm = ({
   const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false)
   const [providers, setProviders] = useState(null);
 
-  const { checkLoggedUser } = useContext(UserContext);
+  const { checkLoggedUser, setUser, setIsLoggedIn, isLoggedIn } = useContext(UserContext);
 
   const handleLogin = () => {
     signInUser({
@@ -28,18 +30,24 @@ const LoginForm = ({
       onSubmit: () => {
         setError(null);
         setIsLoading(true);
+        setIsSuccess(false)
         onSubmit();
       },
       onSuccess: (data) => {
         localStorage.setItem("user", JSON.stringify(data));
-        setIsLoading(false);
-        checkLoggedUser()
+        // checkLoggedUser();
+        setUser(data),
+        setIsLoggedIn(true)
+        setIsSuccess(true)
         onSuccess(data);
+        setIsLoading(false);
+        setUsername("")
       },
       onFailed: (response) => {
         setError({ message: response.data.error });
-        setIsLoading(false);
         onFailed(response);
+        setIsSuccess(false)
+        setIsLoading(false);
       },
     });
   };
@@ -68,18 +76,19 @@ const LoginForm = ({
           onClick={handleLogin}
           className={classNames(
             "px-5 ml-2 text-sm rounded-lg text-white bg-yellow-400",
-            { "opacity-50": isLoading }
+            { "opacity-50": isLoading || isLoggedIn }
           )}
-          disabled={isLoading}
+          disabled={isLoading || isLoggedIn}
         >
           Enter
         </button>
       </div>
       <Alert text="Loading..." show={isLoading} variant="light" />
       <Alert text={error?.message} show={error} variant="danger" />
+      <Alert show={isSuccess} text="Login success!" variant="success" />
       {providers && (
         <>
-          <Divider text="or" />
+         <Divider2 text="or" className="max-w-md mx-auto py-4" />
           <>
             {Object.values(providers).map((provider) => (
               <button
@@ -90,7 +99,7 @@ const LoginForm = ({
                     .then(() => checkLoggedUser())
                     .catch((error) => console.error(error));
                 }}
-                className="px-5 py-3 text-sm border rounded-lg w-full relative"
+                className="px-5 py-3 text-sm border rounded-lg w-full relative bg-white"
               >
                 {provider.name === "Google" && (
                   <div className="absolute h-full inset-y-0 left-3.5 flex justify-start items-center">

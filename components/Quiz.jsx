@@ -1,8 +1,6 @@
 import Choice from "./Choice";
 
-const Quiz = ({ revealChoices, players, answer, quiz }) => {
-  if (!quiz) return;
-
+const Quiz = ({ revealChoices, players, answer, quiz = {} }) => {
   const { question, choices } = quiz;
 
   const selectByPlayersChoice = (answer, players = []) => {

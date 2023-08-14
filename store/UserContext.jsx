@@ -10,6 +10,8 @@ const UserContext = createContext({
   isChecking: false,
   requestFetch: false,
   setRequestFetch: () => {},
+  setUser: () => {},
+  setIsLoggedIn: () => {},
 });
 
 export const UserContextProvider = ({ children }) => {
@@ -26,11 +28,12 @@ export const UserContextProvider = ({ children }) => {
     if (session?.user) {
       const { name, ...rest } = session.user;
       setUser({
-        username: name.replace(" ", ""),
+        username: name,
         ...rest,
       });
       setIsLoggedIn(true);
       setIsChecking(false);
+      console.log("Success logged user with session", session.user);
     } else if (localUser) {
       const { id } = JSON.parse(localUser);
       getUserById({
@@ -39,18 +42,21 @@ export const UserContextProvider = ({ children }) => {
           setUser(data);
           setIsLoggedIn(true);
           setIsChecking(false);
+          console.log("Success logged user with localStorage", JSON.parse(localUser));
         },
-        onFailed: () => {
+        onFailed: (error) => {
           localStorage.removeItem("user");
           setUser(null);
           setIsLoggedIn(false);
           setIsChecking(false);
+          console.log("Failed logged user with localStorage", { error });
         },
       });
     } else {
       setUser(null);
       setIsLoggedIn(false);
       setIsChecking(false);
+      console.log("Checked! No user yet", {localUser});
     }
 
     return user;
@@ -69,6 +75,8 @@ export const UserContextProvider = ({ children }) => {
     isChecking,
     requestFetch,
     setRequestFetch,
+    setUser,
+    setIsLoggedIn,
   };
 
   return (
