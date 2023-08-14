@@ -35,7 +35,9 @@ const Nav = () => {
 
       <div>
         {isChecking ? (
-          <DualRing />
+          <section className="px-8">
+            <DualRing />
+          </section>
         ) : isLoggedIn ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/room" className="black_btn">
