@@ -7,6 +7,7 @@ import classNames from "classnames";
 import Alert from "./Alert";
 import { signInUser } from "@services/api";
 import UserContext from "@store/UserContext";
+import Divider2 from "./Divider2";
 
 const LoginForm = ({
   onSubmit = () => null,
@@ -87,7 +88,7 @@ const LoginForm = ({
       <Alert show={isSuccess} text="Login success!" variant="success" />
       {providers && (
         <>
-          <Divider text="or" />
+         <Divider2 text="or" className="max-w-md mx-auto py-4" />
           <>
             {Object.values(providers).map((provider) => (
               <button
@@ -98,7 +99,7 @@ const LoginForm = ({
                     .then(() => checkLoggedUser())
                     .catch((error) => console.error(error));
                 }}
-                className="px-5 py-3 text-sm border rounded-lg w-full relative"
+                className="px-5 py-3 text-sm border rounded-lg w-full relative bg-white"
               >
                 {provider.name === "Google" && (
                   <div className="absolute h-full inset-y-0 left-3.5 flex justify-start items-center">
