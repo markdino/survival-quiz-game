@@ -7,7 +7,7 @@ import Alert from "@components/Alert";
 
 const SignInPage = () => {
   
-  const { isLoggedIn, checkLoggedUser, user, isChecking } =
+  const { isLoggedIn, isChecking } =
     useContext(UserContext);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -21,14 +21,13 @@ const SignInPage = () => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log({ isLoggedIn, user });
-  //   if (!isChecking && isLoggedIn) {
-  //     goRedirect();
-  //   }
+  useEffect(() => {
+    if (!isChecking && isLoggedIn) {
+      goRedirect();
+    }
 
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isLoggedIn, isChecking]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn, isChecking]);
 
   return (
     <section className="main">
