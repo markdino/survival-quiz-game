@@ -22,7 +22,7 @@ const Nav = () => {
   };
 
   return (
-    <nav className="flex justify-between w-full mb-16 pt-3 px-5">
+    <nav className="flex justify-between w-full py-3 px-5">
       <Link href="/">
         <Image
           src={brandLogo}

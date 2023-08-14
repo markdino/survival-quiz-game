@@ -6,7 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start: #f8f8f6;
   --background-end: #ffffff;
-  --nav-height: 104px;
+  --nav-height: 64px;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -19,17 +19,12 @@
 
 body {
   color: var(--foreground);
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      var(--background-end-rgb)
-    )
+  background: linear-gradient(to bottom, transparent, var(--background-end-rgb))
     var(--background-start-rgb);
 }
 
 .main {
   width: 100vw;
-  /* min-height: calc(100vh - var(--nav-height)); */
   position: fixed;
   display: flex;
   justify-content: center;
@@ -53,6 +48,19 @@ body {
   width: inherit;
 }
 
+.bg_inherit {
+  background: inherit;
+}
+
+.text_stroke {
+  text-shadow: -1px -1px 0 #422107, 0 -1px 0 #422107, 1px -1px 0 #422107, 1px 0 0 #422107,
+    1px 1px 0 #422107, 0 1px 0 #422107, -1px 1px 0 #422107, -1px 0 0 #422107;
+}
+
+.min_h_occupied {
+  min-height: calc(100vh - var(--nav-height));
+}
+
 .prevent_select {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
@@ -69,11 +77,11 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #FFC107;
+  background: #ffc107;
 }
 
 /* For Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #FFC107 #f1f1f1;
+  scrollbar-color: #ffc107 #f1f1f1;
 }
