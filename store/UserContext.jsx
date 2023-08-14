@@ -42,7 +42,7 @@ export const UserContextProvider = ({ children }) => {
           setUser(data);
           setIsLoggedIn(true);
           setIsChecking(false);
-          console.log("Success logged user with localStorage", session.user);
+          console.log("Success logged user with localStorage", JSON.parse(localUser));
         },
         onFailed: (error) => {
           localStorage.removeItem("user");
@@ -56,6 +56,7 @@ export const UserContextProvider = ({ children }) => {
       setUser(null);
       setIsLoggedIn(false);
       setIsChecking(false);
+      console.log("Checked! No user yet", {localUser});
     }
 
     return user;

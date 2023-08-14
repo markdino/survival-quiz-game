@@ -12,7 +12,7 @@ const CreateRoomPage = () => {
   const { isLoggedIn, user, isChecking, setUser, setIsLoggedIn } = useContext(UserContext);
   const router = useRouter();
 
-  const localUser = localStorage.getItem("user");
+  
 
   const handleClick = () => {
     if (!field) return;
@@ -34,15 +34,9 @@ const CreateRoomPage = () => {
     });
   };
 
-  useEffect(()=> {
-    if (localUser) {
-      setUser(JSON.parse(localUser))
-      setIsLoggedIn(true)
-    }
-  }, [])
-
   useEffect(() => {
     console.log({isLoggedIn, user})
+    const localUser = localStorage.getItem("user")
     if (!isChecking && !user && !localUser) {
       router.push("/signin?redirect=/room");
     }
