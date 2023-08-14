@@ -26,7 +26,7 @@ const RoomPage = () => {
   } = useContext(UserContext);
 
   useEffect(() => {
-    if (user && (initialFetch || requestFetch)) {
+    if (initialFetch || requestFetch) {
       getRoomData({
         code: params?.id,
         onSubmit: () => {
@@ -58,7 +58,7 @@ const RoomPage = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [requestFetch, user]);
+  }, [requestFetch]);
 
   // useEffect(() => {
   //   const localUser = localStorage.getItem("user")
