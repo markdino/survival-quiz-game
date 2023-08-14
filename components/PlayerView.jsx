@@ -84,11 +84,11 @@ const PlayerView = ({ data }) => {
     
   }, [socket]);
 
-  useEffect(() => {
-    checkLoggedUser();
+  // useEffect(() => {
+  //   checkLoggedUser();
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <div className="flex items-center justify-center">

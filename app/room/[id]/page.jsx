@@ -24,7 +24,6 @@ const RoomPage = () => {
     setUser,
     setIsLoggedIn,
   } = useContext(UserContext);
-  const localUser = localStorage.getItem("user")
 
   useEffect(() => {
     if (user && (initialFetch || requestFetch)) {
@@ -61,12 +60,13 @@ const RoomPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestFetch, user]);
 
-  useEffect(() => {
-    if (!user && localUser) {
-      setUser(JSON.parse(localUser));
-      setIsLoggedIn(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const localUser = localStorage.getItem("user")
+  //   if (!user && localUser) {
+  //     setUser(JSON.parse(localUser));
+  //     setIsLoggedIn(true);
+  //   }
+  // }, []);
 
   console.log(roomData); //<<************/ Remove this console.log on deploy **********************
   return (
