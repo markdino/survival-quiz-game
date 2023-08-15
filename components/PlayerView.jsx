@@ -56,6 +56,7 @@ const PlayerView = ({ data }) => {
             <PlayerGame
               currentQuiz={data?.currentQuiz}
               roomId={data?._id}
+              player={player}
             />
           ): (
             <GameOver />
