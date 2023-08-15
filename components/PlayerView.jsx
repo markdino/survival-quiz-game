@@ -26,25 +26,39 @@ const PlayerView = ({ data }) => {
     (participant) => participant.user._id === user?.id
   );
 
+  const MessageWrapper = ({ children }) => (
+    <section className="min_h_occupied flex items-center">
+      {children}
+    </section>
+  );
+
   // Render wait component
   const RenderWait = () => (
-    <div className="h-72 w-72 rounded-full bg-yellow-400 flex justify-center items-center">
-      <span className="text-xl">Waiting for other players</span>
-    </div>
+    <MessageWrapper>
+      <div className="h-72 w-72 rounded-full bg-yellow-400 flex justify-center items-center">
+        <span className="text-xl">Waiting for other players</span>
+      </div>
+    </MessageWrapper>
   );
 
   // Game started component
   const GateKeeper = () => (
-    <div className="h-72 w-72 rounded-full bg-gray-400 text-gray-900 flex justify-center items-center">
-      <span className="text-xl text-center">The game has already started!</span>
-    </div>
+    <MessageWrapper>
+      <div className="h-72 w-72 rounded-full bg-gray-400 text-gray-900 flex justify-center items-center">
+        <span className="text-xl text-center">
+          The game has already started!
+        </span>
+      </div>
+    </MessageWrapper>
   );
 
   // Game over component
   const GameOver = () => (
-    <div className="h-72 w-72 rounded-full bg-red-300 text-red-950 flex justify-center items-center">
-      <span className="text-xl text-center">Sorry! You are eliminated</span>
-    </div>
+    <MessageWrapper>
+      <div className="h-72 w-72 rounded-full bg-red-300 text-red-950 flex justify-center items-center">
+        <span className="text-xl text-center">Sorry! You are eliminated</span>
+      </div>
+    </MessageWrapper>
   );
 
   // Render game ui or game started
@@ -58,7 +72,7 @@ const PlayerView = ({ data }) => {
               roomId={data?._id}
               player={player}
             />
-          ): (
+          ) : (
             <GameOver />
           )
         ) : (
@@ -70,19 +84,16 @@ const PlayerView = ({ data }) => {
 
   // Render waiting or player login form
   const handleUnStartGame = () => {
-    return (
-      <>{player ? <RenderWait /> : <PlayerLogin roomId={data._id} />}</>
-    );
+    return <>{player ? <RenderWait /> : <PlayerLogin roomId={data._id} />}</>;
   };
 
   // Listend to socket on data reload
   useEffect(() => {
     socket.on(GAME_TOPIC, (data) => {
       if (data.playerRequestFetch) {
-        setRequestFetch(true)
+        setRequestFetch(true);
       }
     });
-    
   }, [socket]);
 
   // useEffect(() => {
