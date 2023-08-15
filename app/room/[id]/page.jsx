@@ -7,8 +7,15 @@ import { useContext, useEffect, useState } from "react";
 import { getRoomData, updateRoomData } from "@services/api";
 import UserContext from "@store/UserContext";
 import Alert from "@components/Alert";
+import gameBg from '@assets/images/game-bg.jpg'
 
 const RoomPage = () => {
+  const mainStyle = {
+    backgroundImage: `url('${gameBg.src}')`,
+    backgroundSize: "cover",
+    backgroundPosition: "center center",
+  };
+
   const params = useParams();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -71,21 +78,23 @@ const RoomPage = () => {
   console.log(roomData); //<<************/ Remove this console.log on deploy **********************
   return (
     <SocketContext.Provider value={socket}>
-      <section className="container max-w-screen-xl mx-auto">
-        {/* <div>Room {params?.id}</div> */}
-        <Alert
-          text="Loading..."
-          show={(initialFetch && isLoading) || isChecking}
-          variant="ligth"
-        />
-        <Alert text={error?.message} show={error} variant="danger" />
-        {roomData &&
-          !isChecking &&
-          (user?.id === roomData.creator?._id ? (
-            <CreatorView data={roomData} setRoomData={setRoomData} />
-          ) : (
-            <PlayerView data={roomData} />
-          ))}
+      <section className="min_h_occupied"  style={mainStyle}>
+        <section className="container max-w-screen-xl mx-auto">
+          {/* <div>Room {params?.id}</div> */}
+          <Alert
+            text="Loading..."
+            show={(initialFetch && isLoading) || isChecking}
+            variant="ligth"
+          />
+          <Alert text={error?.message} show={error} variant="danger" />
+          {roomData &&
+            !isChecking &&
+            (user?.id === roomData.creator?._id ? (
+              <CreatorView data={roomData} setRoomData={setRoomData} />
+            ) : (
+              <PlayerView data={roomData} />
+            ))}
+        </section>
       </section>
     </SocketContext.Provider>
   );
