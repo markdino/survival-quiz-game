@@ -3,12 +3,13 @@ import UserContext from "@store/UserContext";
 import { SocketContext } from "@websocket";
 import { GAME_TOPIC } from "@websocket/topics";
 import { useState, useEffect, useContext } from "react";
+import Glass from "./Glass";
 
 const COUNTDOWN_TIME = 5000; // 5 secs timer
 const disableStyle =
-  "border-4 rounded-md border-gray my-4 mx-48 py-4 text-xl text-gray-500";
+  "border-4 rounded-md border-gray my-4 mx-48 py-4 text-xl bg-gray-100 text-gray-500";
 const choiceStyle =
-  "border-4 rounded-md border-black my-4 mx-48 py-4 text-xl hover:border-yellow-400";
+  "border-4 rounded-md border-black my-4 mx-48 py-4 text-xl bg-white hover:border-yellow-400";
 const selectedChoiceStyle =
   "border-4 rounded-md border-yellow-400 bg-yellow-500 my-4 mx-48 py-4 text-xl";
 const correctChoiceStyle =
@@ -16,7 +17,7 @@ const correctChoiceStyle =
 const wrongChoiceStyle =
   "border-4 rounded-md border-red-500 bg-red-500 my-4 mx-48 py-4 text-xl";
 
-const PlayerGame = ({ currentQuiz, roomId }) => {
+const PlayerGame = ({ currentQuiz, roomId, player }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [disableSelect, setDisableSelect] = useState(true);
   const [startTimer, setStartTimer] = useState(false);
@@ -51,12 +52,12 @@ const PlayerGame = ({ currentQuiz, roomId }) => {
 
   // Choices color handling if answers are shown
   const handleChoiceStyles = (text, index) => {
-    if (!selectedAnswer && disableSelect) return disableStyle;
+    if (selectedAnswer !== text && disableSelect) return disableStyle;
 
     if (answer) {
       if (selectedAnswer === text && answer !== text) return wrongChoiceStyle;
       if (answer === text) return correctChoiceStyle;
-      return choiceStyle
+      return choiceStyle;
     }
     return text === selectedAnswer ? selectedChoiceStyle : choiceStyle;
   };
@@ -66,10 +67,10 @@ const PlayerGame = ({ currentQuiz, roomId }) => {
     if (startTimer) {
       setDisableSelect(false);
       setTimeout(() => {
-          socket.emit(GAME_TOPIC, { stopTimer: true });
-          setDisableSelect(true);
-          setStartTimer(false);
-          alert("Time's Up!");
+        socket.emit(GAME_TOPIC, { stopTimer: true });
+        setDisableSelect(true);
+        setStartTimer(false);
+        alert("Time's Up!");
       }, COUNTDOWN_TIME);
     }
   }, [startTimer]);
@@ -86,8 +87,15 @@ const PlayerGame = ({ currentQuiz, roomId }) => {
         },
       });
     }
-    console.log({selectedAnswer})
+    console.log({ selectedAnswer });
   }, [selectedAnswer]);
+
+  useEffect(() => {
+    if (player.answer) {
+      setSelectedAnswer(player.answer);
+      setRevealChoice(true);
+    }
+  }, [player]);
 
   //   Listen to socket
   useEffect(() => {
@@ -99,7 +107,7 @@ const PlayerGame = ({ currentQuiz, roomId }) => {
       if (data?.newQuiz) {
         setAnswer("");
         setRevealChoice(false);
-        setSelectedAnswer(null)
+        setSelectedAnswer(null);
       }
 
       if (data?.startTimer) {
@@ -113,23 +121,25 @@ const PlayerGame = ({ currentQuiz, roomId }) => {
   }, [socket]);
 
   return (
-    <section
-      className="flex items-center justify-center m-24 py-24 absolute top-0
-                        border-4 rounded-md border-black"
+    <Glass
+      opacity={0.3}
+      className="flex items-center mt-10 mx-4 justify-center py-5 w-full"
     >
       <div className="text-center my-8">
-        <span className="text-xl my-4">
+        <span className="text-xl">
           {startTimer ? (
             <strong className="text-2xl text-green-500">Start!</strong>
           ) : (
             "5 seconds to answer"
           )}
         </span>
-        <h3 className="text-3xl my-4">Question</h3>
-        <p className="text-2xl my-4 w-screen prevent_select">{question}</p>
-        <div className="flex justify-center items-center text-center my-16">
+        <Glass className='px-5 mt-5'>
+          <h3 className="text-3xl my-4">Question</h3>
+          <p className="text-2xl my-4 prevent_select">{question}</p>
+        </Glass>
+        <div className="flex justify-center items-center text-center py-6">
           {revealChoice && (
-            <ul className="w-1/2">
+            <ul className="min-w-full">
               {choices.map((choice) =>
                 renderChoice(choice, choices.indexOf(choice))
               )}
@@ -137,7 +147,7 @@ const PlayerGame = ({ currentQuiz, roomId }) => {
           )}
         </div>
       </div>
-    </section>
+    </Glass>
   );
 };
 

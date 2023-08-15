@@ -1,7 +1,7 @@
 import classNames from "classnames";
 
 const choiceStyle =
-  "w-full flex justify-center border-2 rounded-md border-black my-4 p-2 text-md";
+  "w-full flex justify-center bg-white border-2 rounded-md border-black my-4 p-2 text-md";
 const wrongChoiceStyle = "border-4 rounded-md border-red-500 bg-red-500";
 const correctChoiceStyle = "border-4 rounded-md border-green-500 bg-green-500";
 
@@ -14,7 +14,7 @@ const Choice = ({ choice, players, answer }) => {
         className={classNames(
           choiceStyle,
         //   answer && (answer === choice ? correctChoiceStyle : wrongChoiceStyle),
-          { "border-2": !answer, [correctChoiceStyle]: answer === choice }
+          { "border-2 bg-white": !answer, [correctChoiceStyle]: answer === choice }
         )}
       >
         <span>{choice}</span>
