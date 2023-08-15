@@ -123,7 +123,7 @@ const PlayerGame = ({ currentQuiz, roomId, player }) => {
   return (
     <Glass
       opacity={0.3}
-      className="flex items-center mt-10 mx-4 justify-center py-5 w-full"
+      className="flex items-center mt-10 mx-4 justify-center py-5 px-8 w-full"
     >
       <div className="text-center my-8">
         <span className="text-xl">
@@ -133,7 +133,7 @@ const PlayerGame = ({ currentQuiz, roomId, player }) => {
             "5 seconds to answer"
           )}
         </span>
-        <Glass className='px-5 mt-5'>
+        <Glass className="px-5 mt-5" opacity={0.5}>
           <h3 className="text-3xl my-4">Question</h3>
           <p className="text-2xl my-4 prevent_select">{question}</p>
         </Glass>
