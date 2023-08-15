@@ -9,6 +9,9 @@ import { getQuiz, revealQuiz, updateRoomData } from "@services/api";
 import UserContext from "@store/UserContext";
 import RevealChoices from "./RevealChoices";
 import Quiz from "./Quiz";
+import RightPanel from "./RightPanel";
+import LargeButton from "./LargeButton";
+import BottomPanel from "./BottomPanel";
 
 const CreatorView = ({ data }) => {
   const [quiz, setQuiz] = useState(null);
@@ -182,25 +185,43 @@ const CreatorView = ({ data }) => {
   return (
     <div className="flex items-center justify-center">
       <PlayerList players={data?.participants} />
-      <StartGame disabled={started} onClick={handleGameStart} />
       <Quiz
         revealChoices={revealChoice}
         answer={answer}
         quiz={data?.currentQuiz}
         players={data?.participants}
       />
-      <RevealChoices
-        onClickRevealChoice={handleRevealChoice}
-        onClickStartTimer={handleTimerStart}
-        disabledRevealChoice={!data?.started || revealChoice}
-        disabledStartTimer={!data?.started || timerStarted}
-      />
-      <NextQuestion
-        disabledNext={!data?.started || timerStarted}
-        disabledReveal={!data?.started || timerStarted || data?.answer}
-        handleNextQuestion={handleNewQuiz}
-        handleRevealAnswer={handleRevealAnswer}
-      />
+      <BottomPanel>
+        <LargeButton
+          onClick={handleRevealChoice}
+          disabled={!data?.started || revealChoice}
+        >
+          Reveal Choices
+        </LargeButton>
+        <LargeButton
+          onClick={handleTimerStart}
+          disabled={!data?.started || timerStarted}
+        >
+          Start Timer
+        </LargeButton>
+      </BottomPanel>
+      <RightPanel>
+        <LargeButton
+          onClick={handleRevealAnswer}
+          disabled={!data?.started || timerStarted || data?.answer}
+        >
+          Reveal Answer
+        </LargeButton>
+        <LargeButton
+          onClick={handleNewQuiz}
+          disabled={!data?.started || timerStarted}
+        >
+          Next Question
+        </LargeButton>
+        <LargeButton onClick={handleGameStart} disabled={started}>
+          Start Game
+        </LargeButton>
+      </RightPanel>
     </div>
   );
 };

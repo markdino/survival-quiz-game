@@ -1,5 +1,7 @@
 import React from "react";
 import classNames from "classnames";
+import styles from "@styles/Glass.module.css";
+import Glass from "./Glass";
 
 const PlayerName = ({ userName, isActive }) => {
   return (
@@ -20,24 +22,33 @@ const PlayerName = ({ userName, isActive }) => {
   );
 };
 
-const PlayerList = ({ players }) => {
+const PlayerList = ({ players = [] }) => {
+  const playersCount = players.length;
+  const activePlayers = players.filter((player) => player.active);
+  const activePlayersCount = activePlayers.length;
   return (
-    <section
-      className="flex flex-col items-center justify-center 
-        w-1/4 h-1/2 mt-16 mx-8 py-8 absolute top-0 left-0
-        border-4 rounded-md border-black"
+    <Glass
+      className="flex flex-col items-center w-1/4 mt-16 mb-8 mx-8 py-8 px-4 absolute top-5 left-0 bottom-0"
+      opacity={0.4}
     >
-      <h3 className="my-16 text-2xl absolute top-0">List of Players: </h3>
-      <ul className="w-full px-8 py-4 mt-16 overflow-auto">
-        {players.map((player) => (
-          <PlayerName
-            key={player._id}
-            userName={player.user?.username}
-            isActive={player.active}
-          />
-        ))}
+      <section className="flex justify-between w-full px-4">
+      <h3 className="text-2xl font-bold text-amber-400">
+        List of Players:
+      </h3>
+      <p>{activePlayersCount}/{activePlayersCount}</p>
+      </section>
+      <ul className="w-full py-4 px-4 overflow-auto">
+        <Glass opacity={0.5} shadow={0.5} shadowY="10px" shadowX="6px">
+          {players.map((player) => (
+            <PlayerName
+              key={player._id}
+              userName={player.user?.username}
+              isActive={player.active}
+            />
+          ))}
+        </Glass>
       </ul>
-    </section>
+    </Glass>
   );
 };
 
