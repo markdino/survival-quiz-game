@@ -15,7 +15,7 @@ const Glass = ({
       style={{
         background: `rgba(255, 255, 255, ${opacity})`,
         backdropFilter: `blur(${blur}px)`,
-        ["-webkit-backdrop-filter"]: ` blur(${blur}px)`,
+        WebkitBackdropFilter: ` blur(${blur}px)`,
         boxShadow: `0 ${shadowX} ${shadowY} 0 rgba(31, 38, 135, ${shadow})`,
       }}
     >

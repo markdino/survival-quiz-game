@@ -82,12 +82,13 @@ const CreatorView = ({ data }) => {
             participants: clearParticipantsAnswer(),
             archivedQuiz: archiveQuiz,
           },
-          onSuccess: () => {
+          onSuccess: (data) => {
             setRequestFetch(true);
             setRevealChoice(false);
             socket.emit(GAME_TOPIC, {
               playerRequestFetch: true,
               newQuiz: true,
+              roomId: data?._id,
             });
           },
         });
@@ -104,11 +105,12 @@ const CreatorView = ({ data }) => {
             answer: mostSelectedAnswer,
             participants: validateParticipantsAnswer(mostSelectedAnswer),
           },
-          onSuccess: () => {
+          onSuccess: (data) => {
             setRequestFetch(true);
             socket.emit(GAME_TOPIC, {
               revealAnswer: true,
               answer: mostSelectedAnswer,
+              roomId: data?._id,
             });
           },
         });
@@ -124,9 +126,13 @@ const CreatorView = ({ data }) => {
               answer,
               participants: validateParticipantsAnswer(answer),
             },
-            onSuccess: () => {
+            onSuccess: (data) => {
               setRequestFetch(true);
-              socket.emit(GAME_TOPIC, { revealAnswer: true, answer });
+              socket.emit(GAME_TOPIC, {
+                revealAnswer: true,
+                answer,
+                roomId: data?._id,
+              });
             },
           });
         },
@@ -146,12 +152,12 @@ const CreatorView = ({ data }) => {
 
   const handleTimerStart = () => {
     setTimerStarted(true);
-    socket.emit(GAME_TOPIC, { startTimer: true });
+    socket.emit(GAME_TOPIC, { startTimer: true, roomId: data?._id });
   };
 
   const handleRevealChoice = () => {
     setRevealChoice(true);
-    socket.emit(GAME_TOPIC, { revealChoice: true });
+    socket.emit(GAME_TOPIC, { revealChoice: true, roomId: data?._id });
   };
 
   // Setter on data reload
@@ -173,11 +179,13 @@ const CreatorView = ({ data }) => {
   // Listen to socket
   useEffect(() => {
     socket.on(GAME_TOPIC, (data) => {
-      if (data.creatorRequestFetch) {
-        setRequestFetch(true);
-      }
-      if (data.stopTimer) {
-        setTimerStarted(false);
+      if (data.roomId === data?._id) {
+        if (data.creatorRequestFetch) {
+          setRequestFetch(true);
+        }
+        if (data.stopTimer) {
+          setTimerStarted(false);
+        }
       }
     });
   }, [socket]);

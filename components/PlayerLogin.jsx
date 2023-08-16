@@ -24,7 +24,7 @@ const PlayerLogin = ({ roomId }) => {
               userId: user._id,
               onSuccess: () => {
                 setRequestFetch(true);
-                socket.emit(GAME_TOPIC, { creatorRequestFetch: true });
+                socket.emit(GAME_TOPIC, { creatorRequestFetch: true, roomId });
               },
               onFailed: (error) => {
                 console.log({ error });
@@ -39,7 +39,7 @@ const PlayerLogin = ({ roomId }) => {
           userId: user?.id,
           onSuccess: () => {
             setRequestFetch(true);
-            socket.emit(GAME_TOPIC, { creatorRequestFetch: true });
+            socket.emit(GAME_TOPIC, { creatorRequestFetch: true, roomId });
           },
           onFailed: (error) => {
             console.log({ error });

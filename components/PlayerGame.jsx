@@ -67,7 +67,7 @@ const PlayerGame = ({ currentQuiz, roomId, player }) => {
     if (startTimer) {
       setDisableSelect(false);
       setTimeout(() => {
-        socket.emit(GAME_TOPIC, { stopTimer: true });
+        socket.emit(GAME_TOPIC, { stopTimer: true, roomId });
         setDisableSelect(true);
         setStartTimer(false);
         alert("Time's Up!");
@@ -83,7 +83,7 @@ const PlayerGame = ({ currentQuiz, roomId, player }) => {
         userId: user.id,
         answer: selectedAnswer,
         onSuccess: () => {
-          socket.emit(GAME_TOPIC, { creatorRequestFetch: true });
+          socket.emit(GAME_TOPIC, { creatorRequestFetch: true, roomId });
         },
       });
     }
@@ -100,22 +100,24 @@ const PlayerGame = ({ currentQuiz, roomId, player }) => {
   //   Listen to socket
   useEffect(() => {
     socket.on(GAME_TOPIC, (data) => {
-      if (data?.revealAnswer) {
-        setAnswer(data?.answer);
-      }
+      if (data.roomId === roomId) {
+        if (data?.revealAnswer) {
+          setAnswer(data?.answer);
+        }
 
-      if (data?.newQuiz) {
-        setAnswer("");
-        setRevealChoice(false);
-        setSelectedAnswer(null);
-      }
+        if (data?.newQuiz) {
+          setAnswer("");
+          setRevealChoice(false);
+          setSelectedAnswer(null);
+        }
 
-      if (data?.startTimer) {
-        setStartTimer(true);
-      }
+        if (data?.startTimer) {
+          setStartTimer(true);
+        }
 
-      if (data?.revealChoice) {
-        setRevealChoice(true);
+        if (data?.revealChoice) {
+          setRevealChoice(true);
+        }
       }
     });
   }, [socket]);

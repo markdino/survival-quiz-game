@@ -27,9 +27,7 @@ const PlayerView = ({ data }) => {
   );
 
   const MessageWrapper = ({ children }) => (
-    <section className="min_h_occupied flex items-center">
-      {children}
-    </section>
+    <section className="min_h_occupied flex items-center">{children}</section>
   );
 
   // Render wait component
@@ -90,17 +88,11 @@ const PlayerView = ({ data }) => {
   // Listend to socket on data reload
   useEffect(() => {
     socket.on(GAME_TOPIC, (data) => {
-      if (data.playerRequestFetch) {
+      if (data.roomId === data?._id && data.playerRequestFetch) {
         setRequestFetch(true);
       }
     });
   }, [socket]);
-
-  // useEffect(() => {
-  //   checkLoggedUser();
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   return (
     <div className="flex items-center justify-center">
