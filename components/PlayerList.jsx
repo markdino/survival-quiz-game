@@ -8,7 +8,7 @@ const PlayerName = ({ userName, isActive }) => {
     <li
       className={classNames(
         "my-2 mx-4 text-xl flex justify-between items-center",
-        { "text-gray-600": !isActive }
+        { "text-gray-500": !isActive }
       )}
     >
       {userName}
