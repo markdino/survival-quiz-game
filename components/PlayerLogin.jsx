@@ -4,16 +4,16 @@ import UserContext from "@store/UserContext";
 import { joinRoom } from "@services/api";
 import { SocketContext } from "@websocket";
 import { GAME_TOPIC } from "@websocket/topics";
+import Glass from "./Glass";
 
 const PlayerLogin = ({ roomId }) => {
-  //   const [playerReady, setPlayerReady] = useState(false);
 
   const { isLoggedIn, setRequestFetch, user, isChecking } =
     useContext(UserContext);
   const socket = useContext(SocketContext);
 
   return (
-    <section className="flex items-center justify-center m-24 py-24 absolute top-0">
+    <Glass opacity={0.5} className="flex items-center justify-center mt-32 p-16 absolute top-0">
       {!isLoggedIn ? (
         <LoginForm
           label="Input your Username"
@@ -46,7 +46,7 @@ const PlayerLogin = ({ roomId }) => {
           },
         })
       )}
-    </section>
+    </Glass>
   );
 };
 
