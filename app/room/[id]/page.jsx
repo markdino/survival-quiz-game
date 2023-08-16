@@ -65,12 +65,10 @@ const RoomPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestFetch]);
 
-  console.log(roomData); //<<************/ Remove this console.log on deploy **********************
   return (
     <SocketContext.Provider value={socket}>
       <section className="min_h_occupied"  style={mainStyle}>
         <section className="container max-w-screen-xl mx-auto">
-          {/* <div>Room {params?.id}</div> */}
           <Alert
             text="Loading..."
             show={(initialFetch && isLoading) || isChecking}

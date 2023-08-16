@@ -178,8 +178,9 @@ const CreatorView = ({ data }) => {
 
   // Listen to socket
   useEffect(() => {
+    const roomId = data?._id
     socket.on(GAME_TOPIC, (data) => {
-      if (data.roomId === data?._id) {
+      if (data.roomId === roomId) {
         if (data.creatorRequestFetch) {
           setRequestFetch(true);
         }
