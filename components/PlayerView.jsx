@@ -87,8 +87,9 @@ const PlayerView = ({ data }) => {
 
   // Listend to socket on data reload
   useEffect(() => {
+    const roomId = data?._id
     socket.on(GAME_TOPIC, (data) => {
-      if (data.roomId === data?._id && data.playerRequestFetch) {
+      if (data.roomId === roomId && data.playerRequestFetch) {
         setRequestFetch(true);
       }
     });
