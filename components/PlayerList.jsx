@@ -8,7 +8,7 @@ const PlayerName = ({ userName, isActive }) => {
     <li
       className={classNames(
         "my-2 mx-4 text-xl flex justify-between items-center",
-        { "text-gray-300": !isActive }
+        { "text-gray-500": !isActive }
       )}
     >
       {userName}
@@ -35,7 +35,7 @@ const PlayerList = ({ players = [] }) => {
       <h3 className="text-2xl font-bold text-amber-400">
         List of Players:
       </h3>
-      <p>{activePlayersCount}/{activePlayersCount}</p>
+      <p>{activePlayersCount}/{playersCount}</p>
       </section>
       <ul className="w-full py-4 px-4 overflow-auto">
         <Glass opacity={0.5} shadow={0.5} shadowY="10px" shadowX="6px">
