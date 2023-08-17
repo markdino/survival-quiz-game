@@ -29,7 +29,7 @@ const PlayerList = ({ players = [] }) => {
   return (
     <Glass
       className="flex flex-col items-center w-1/4 mt-16 mb-8 mx-8 py-8 px-4 absolute top-5 left-0 bottom-0"
-      opacity={0.4}
+      opacity={0.3}
     >
       <section className="flex justify-between w-full px-4">
       <h3 className="text-2xl font-bold text-amber-400">
