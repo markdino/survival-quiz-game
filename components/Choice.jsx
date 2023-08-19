@@ -1,9 +1,9 @@
 import classNames from "classnames";
 
 const choiceStyle =
-  "w-full flex justify-center bg-white border-2 rounded-md border-black my-4 p-2 text-md";
+  "w-full flex justify-center border-2 rounded-md border-black mt-4 mb-1 p-2 text-md";
 const wrongChoiceStyle = "border-4 rounded-md border-red-500 bg-red-500";
-const correctChoiceStyle = "border-4 rounded-md border-green-500 bg-green-500";
+const correctChoiceStyle = "border-4 rounded-md border-green-600 bg-green-500";
 
 const Choice = ({ choice, players, answer }) => {
   if (!choice) return;
@@ -13,17 +13,17 @@ const Choice = ({ choice, players, answer }) => {
       <div
         className={classNames(
           choiceStyle,
-        //   answer && (answer === choice ? correctChoiceStyle : wrongChoiceStyle),
-          { "border-2 bg-white": !answer, [correctChoiceStyle]: answer === choice }
+          //   answer && (answer === choice ? correctChoiceStyle : wrongChoiceStyle),
+          answer === choice ? correctChoiceStyle : "bg-white"
         )}
       >
         <span>{choice}</span>
       </div>
       <div className="mt-2 h-24">
-        <ul className="overflow-auto max-h-24 px-4">
+        <ul className="overflow-auto max-h-20 px-4">
           {players?.map((player) => (
-                <li key={player._id}>{player.user.username}</li>
-              ))}
+            <li key={player._id}>{player.user.username}</li>
+          ))}
         </ul>
         {answer && choice !== answer && players?.length > 0 && (
           <div className="mt-4">
