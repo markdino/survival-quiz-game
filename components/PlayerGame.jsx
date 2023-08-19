@@ -6,15 +6,15 @@ import { useState, useEffect, useContext } from "react";
 import Glass from "./Glass";
 
 const disableStyle =
-  "border-4 rounded-md border-gray my-4 mx-12 py-4 text-xl bg-gray-100 text-gray-500";
+  "border-4 rounded-md border-gray my-4 px-12 py-4 text-xl bg-gray-100 text-gray-500";
 const choiceStyle =
-  "border-4 rounded-md border-black my-4 mx-12 py-4 text-xl bg-white hover:border-yellow-400";
+  "border-4 rounded-md border-black my-4 px-12 py-4 text-xl bg-white hover:border-yellow-400";
 const selectedChoiceStyle =
-  "border-4 rounded-md border-yellow-400 bg-yellow-500 my-4 mx-12 py-4 text-xl";
+  "border-4 rounded-md border-yellow-400 bg-yellow-500 my-4 px-12 py-4 text-xl";
 const correctChoiceStyle =
-  "border-4 rounded-md border-green-500 bg-green-500 my-4 mx-12 py-4 text-xl";
+  "border-4 rounded-md border-green-500 bg-green-500 my-4 px-12 py-4 text-xl";
 const wrongChoiceStyle =
-  "border-4 rounded-md border-red-500 bg-red-500 my-4 mx-12 py-4 text-xl";
+  "border-4 rounded-md border-red-500 bg-red-500 my-4 px-12 py-4 text-xl";
 
 const PlayerGame = ({ currentQuiz, roomId, player }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -154,7 +154,7 @@ const PlayerGame = ({ currentQuiz, roomId, player }) => {
         </Glass>
         <div className="flex justify-center items-center text-center py-6">
           {revealChoice && (
-            <ul className="w-full max-w-md">
+            <ul className="w-96">
               {choices.map((choice) =>
                 renderChoice(choice, choices.indexOf(choice))
               )}
