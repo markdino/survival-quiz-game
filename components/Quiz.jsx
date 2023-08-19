@@ -17,7 +17,7 @@ const Quiz = ({ revealChoices, players, answer, quiz = {} }) => {
           w-2/5 h-3/5 mt-16 absolute top-5"
       >
         <div className="w-full flex flex-col justify-between items-between">
-          <span className="my-8 ml-4 mr-16 w-full text-xl absolute top-0 text-center">
+          <span className="my-8 px-16 w-full text-xl text-center">
             {question}
           </span>
           <div className="w-full h-3/4 flex justify-between absolute mb-8 bottom-0">
