@@ -30,15 +30,15 @@ const Quiz = ({ revealChoices, players, answer, quiz = {} }) => {
                     answer={answer}
                   />
                   <Choice
-                    choice={choices[1]}
-                    players={selectByPlayersChoice(choices[1], players)}
+                    choice={choices[2]}
+                    players={selectByPlayersChoice(choices[2], players)}
                     answer={answer}
                   />
                 </div>
                 <div className="w-1/2 flex flex-col justify-between  items-center">
                   <Choice
-                    choice={choices[2]}
-                    players={selectByPlayersChoice(choices[2], players)}
+                    choice={choices[1]}
+                    players={selectByPlayersChoice(choices[1], players)}
                     answer={answer}
                   />
                   <Choice
