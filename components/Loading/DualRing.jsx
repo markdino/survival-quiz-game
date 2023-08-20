@@ -1,4 +1,4 @@
-import styles from './DualRing.module.css';
+import styles from '@styles/DualRing.module.css';
 
 const DualRing = () => {
   return (

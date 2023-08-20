@@ -20,6 +20,7 @@ const CreatorView = ({ data }) => {
   const [answer, setAnswer] = useState("");
   const [timerStarted, setTimerStarted] = useState(false);
   const [revealChoice, setRevealChoice] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState("")
 
   const socket = useContext(SocketContext);
   const { setRequestFetch } = useContext(UserContext);
@@ -45,6 +46,8 @@ const CreatorView = ({ data }) => {
 
   const getMostSelectedAnswer = (callback) => {
     const activePlayers = data?.participants.filter((player) => player.active);
+    if (!activePlayers || activePlayers.length <= 0) return
+
     const answerCount = {};
 
     activePlayers.forEach((player) => {
@@ -69,11 +72,13 @@ const CreatorView = ({ data }) => {
   };
 
   const handleNewQuiz = () => {
+    setButtonLoading('next-question')
     getQuiz({
       exclude: archiveQuiz,
       onSuccess: (newQuiz) => {
         setArchiveQuiz((prev) => [...prev, newQuiz._id]);
         setQuiz(newQuiz);
+        setButtonLoading('')
         updateRoomData({
           roomId: data?._id,
           newData: {
@@ -97,6 +102,7 @@ const CreatorView = ({ data }) => {
   };
 
   const handleRevealAnswer = () => {
+    setButtonLoading('reveal-answer')
     if (data?.currentQuiz.type === "poll") {
       getMostSelectedAnswer((mostSelectedAnswer) => {
         updateRoomData({
@@ -106,6 +112,7 @@ const CreatorView = ({ data }) => {
             participants: validateParticipantsAnswer(mostSelectedAnswer),
           },
           onSuccess: (data) => {
+            setButtonLoading('')
             setRequestFetch(true);
             socket.emit(GAME_TOPIC, {
               revealAnswer: true,
@@ -127,6 +134,7 @@ const CreatorView = ({ data }) => {
               participants: validateParticipantsAnswer(answer),
             },
             onSuccess: (data) => {
+              setButtonLoading('')
               setRequestFetch(true);
               socket.emit(GAME_TOPIC, {
                 revealAnswer: true,
@@ -141,6 +149,7 @@ const CreatorView = ({ data }) => {
   };
 
   const handleGameStart = () => {
+    setButtonLoading('start-game')
     updateRoomData({
       roomId: data?._id,
       newData: { started: true },
@@ -210,6 +219,7 @@ const CreatorView = ({ data }) => {
         <LargeButton
           onClick={handleTimerStart}
           disabled={!data?.started || timerStarted}
+          loading={timerStarted}
         >
           Start Timer
         </LargeButton>
@@ -218,16 +228,18 @@ const CreatorView = ({ data }) => {
         <LargeButton
           onClick={handleRevealAnswer}
           disabled={!data?.started || timerStarted || data?.answer}
+          loading={buttonLoading === 'reveal-answer'}
         >
           Reveal Answer
         </LargeButton>
         <LargeButton
           onClick={handleNewQuiz}
           disabled={!data?.started || timerStarted}
+          loading={buttonLoading === 'next-question'}
         >
           Next Question
         </LargeButton>
-        <LargeButton onClick={handleGameStart} disabled={started}>
+        <LargeButton onClick={handleGameStart} disabled={started} loading={buttonLoading === 'start-game'}>
           Start Game
         </LargeButton>
       </RightPanel>
