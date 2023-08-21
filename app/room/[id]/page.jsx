@@ -68,19 +68,18 @@ const RoomPage = () => {
     <SocketContext.Provider value={socket}>
       <section className="min_h_occupied" style={mainStyle}>
         <section className="container max-w-screen-xl mx-auto">
-          {(initialFetch && isLoading) ||
-            (isChecking && (
-              <MessageWrapper className="justify-center flex-col fixed z-50 right-0 left-0">
-                <FacebookLoading />
-                <Alert
-                  text={
-                    isChecking ? "Checking user..." : isLoading && "Loading..."
-                  }
-                  show={(initialFetch && isLoading) || isChecking}
-                  variant="ligth"
-                />
-              </MessageWrapper>
-            ))}
+          {((initialFetch && isLoading) || isChecking) && (
+            <MessageWrapper className="justify-center flex-col fixed z-50 right-0 left-0">
+              <FacebookLoading />
+              <Alert
+                text={
+                  isChecking ? "Checking user..." : isLoading && "Loading..."
+                }
+                show={isLoading || isChecking}
+                variant="ligth"
+              />
+            </MessageWrapper>
+          )}
           {error && (
             <MessageWrapper className="justify-center fixed z-50 right-0 left-0">
               <Glass className="p-8" opacity={0.3}>
