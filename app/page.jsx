@@ -27,7 +27,7 @@ export default function Home() {
             {metadata?.title}
           </h1>
         </section>
-        <Glass className="py-20">
+        <Glass className="p-20 mx-auto max-w-fit">
           <JoinField />
           <Divider2 text="or" className="max-w-md mx-auto py-4" />
           <CreateRoomButton />
