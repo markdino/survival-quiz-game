@@ -10,6 +10,7 @@ import Alert from "@components/Alert";
 import gameBg from "@assets/images/game-bg.jpg";
 import MessageWrapper from "@components/MessageWrapper";
 import FacebookLoading from "@components/Loading/FacebookLoading";
+import Glass from "@components/Glass";
 
 const RoomPage = () => {
   const mainStyle = {
@@ -67,12 +68,14 @@ const RoomPage = () => {
     <SocketContext.Provider value={socket}>
       <section className="min_h_occupied" style={mainStyle}>
         <section className="container max-w-screen-xl mx-auto">
-          {(isLoading) ||
+          {(initialFetch && isLoading) ||
             (isChecking && (
               <MessageWrapper className="justify-center flex-col fixed z-50 right-0 left-0">
                 <FacebookLoading />
                 <Alert
-                  text={isChecking ? "Checking user..." :isLoading && "Loading..."}
+                  text={
+                    isChecking ? "Checking user..." : isLoading && "Loading..."
+                  }
                   show={(initialFetch && isLoading) || isChecking}
                   variant="ligth"
                 />
@@ -80,7 +83,13 @@ const RoomPage = () => {
             ))}
           {error && (
             <MessageWrapper className="justify-center fixed z-50 right-0 left-0">
-              <Alert text={error?.message || 'Something went wrong!'} show={error} variant="danger" />
+              <Glass className="p-8" opacity={0.3}>
+                <Alert
+                  text={error?.message || "Something went wrong!"}
+                  show={error}
+                  variant="danger"
+                />
+              </Glass>
             </MessageWrapper>
           )}
           {roomData &&
