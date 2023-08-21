@@ -227,7 +227,7 @@ const CreatorView = ({ data }) => {
       <RightPanel>
         <LargeButton
           onClick={handleRevealAnswer}
-          disabled={!data?.started || timerStarted || data?.answer}
+          disabled={!data?.started || timerStarted || data?.answer || !revealChoice}
           loading={buttonLoading === 'reveal-answer'}
         >
           Reveal Answer
