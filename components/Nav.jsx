@@ -2,16 +2,18 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { signOut, useSession } from "next-auth/react";
 import brandLogo from "@public/assets/brand.png";
 import UserContext from "@store/UserContext";
 import DualRing from "./Loading/DualRing";
+import { usePathname } from "next/navigation";
 
 const Nav = () => {
   const { data: session } = useSession();
   const { isLoggedIn, checkLoggedUser, user, isChecking } =
     useContext(UserContext);
+  const pathName = usePathname();
 
   const handleSignOut = () => {
     if (session?.user) {
@@ -20,7 +22,6 @@ const Nav = () => {
     localStorage.removeItem("user");
     checkLoggedUser();
   };
-
   return (
     <nav className="flex justify-between w-full py-3 px-5">
       <Link href="/">
@@ -71,7 +72,7 @@ const Nav = () => {
             </Link>
           </div>
         ) : (
-          <Link href="/signin" className="black_btn">
+          <Link href={`/signin?redirect=${pathName}`} className="black_btn">
             Sign In
           </Link>
         )}
