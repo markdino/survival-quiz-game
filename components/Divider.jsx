@@ -1,6 +1,6 @@
 import classNames from "classnames";
 
-const Divider2 = ({ text, className, ...props }) => {
+const Divider = ({ text, className, ...props }) => {
   return (
     <div className={classNames("flex justify-stretch items-center", {["gap-2"]: text}, className)} {...props}>
       <div className="h-px bg-slate-600 w-full"></div>
@@ -12,4 +12,4 @@ const Divider2 = ({ text, className, ...props }) => {
   );
 };
 
-export default Divider2;
+export default Divider;
