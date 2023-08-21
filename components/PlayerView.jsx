@@ -5,6 +5,7 @@ import PlayerLogin from "./PlayerLogin";
 import UserContext from "@store/UserContext";
 import { SocketContext } from "@websocket";
 import { GAME_TOPIC } from "@websocket/topics";
+import MessageWrapper from "./MessageWrapper";
 
 // Dummy game data
 const question = "What comes after Mercury?";
@@ -24,10 +25,6 @@ const PlayerView = ({ data }) => {
   // const { question, choices} = data?.currentQuiz
   const player = data.participants.find(
     (participant) => participant.user._id === user?.id
-  );
-
-  const MessageWrapper = ({ children }) => (
-    <section className="min_h_occupied flex items-center">{children}</section>
   );
 
   // Render wait component
