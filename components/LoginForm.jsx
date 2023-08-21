@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import Divider from "./Divider";
 import { signIn, getProviders } from "next-auth/react";
 import Image from "next/image";
 import googleLogo from "@assets/images/google.png";
@@ -35,7 +34,6 @@ const LoginForm = ({
       },
       onSuccess: (data) => {
         localStorage.setItem("user", JSON.stringify(data));
-        // checkLoggedUser();
         setUser(data),
         setIsLoggedIn(true)
         setIsSuccess(true)

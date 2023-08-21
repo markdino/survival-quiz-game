@@ -1,6 +1,5 @@
 import React from "react";
 import classNames from "classnames";
-import styles from "@styles/Glass.module.css";
 import Glass from "./Glass";
 
 const PlayerName = ({ userName, isActive }) => {

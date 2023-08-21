@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import PlayerGame from "./PlayerGame";
 import PlayerLogin from "./PlayerLogin";
 import UserContext from "@store/UserContext";
@@ -7,22 +7,10 @@ import { SocketContext } from "@websocket";
 import { GAME_TOPIC } from "@websocket/topics";
 import MessageWrapper from "./MessageWrapper";
 
-// Dummy game data
-const question = "What comes after Mercury?";
-const choices = ["7/11", "McDonalds", "Venus", "Jollibee"];
-const answer = "Venus";
-
 const PlayerView = ({ data }) => {
-  const [startGame, setStartGame] = useState(false);
-  const [playerEliminated, setPlayerEliminated] = useState(false);
-  const [showQuestion, setShowQuestion] = useState(true);
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [startTimer, setStartTimer] = useState(false);
-
-  const { user, setRequestFetch, checkLoggedUser } = useContext(UserContext);
+  const { user, setRequestFetch } = useContext(UserContext);
   const socket = useContext(SocketContext);
 
-  // const { question, choices} = data?.currentQuiz
   const player = data.participants.find(
     (participant) => participant.user._id === user?.id
   );
@@ -84,7 +72,7 @@ const PlayerView = ({ data }) => {
 
   // Listend to socket on data reload
   useEffect(() => {
-    const roomId = data?._id
+    const roomId = data?._id;
     socket.on(GAME_TOPIC, (data) => {
       if (data.roomId === roomId && data.playerRequestFetch) {
         setRequestFetch(true);
