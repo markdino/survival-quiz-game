@@ -1,7 +1,7 @@
 "use client";
 import LoginForm from "@components/LoginForm";
 import UserContext from "@store/UserContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Alert from "@components/Alert";
 import mainBg from "@assets/images/main-bg.jpg";
