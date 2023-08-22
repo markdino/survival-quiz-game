@@ -44,10 +44,6 @@ const PlayerGame = ({ currentQuiz, roomId, player }) => {
   // Select answer interaction logic
   const handleSelectAnswer = (text) => {
     if (disableSelect) return;
-    // if (text === selectedAnswer) {
-    //   setSelectedAnswer(null);
-    //   return;
-    // }
     setSelectedAnswer(text);
   };
 
