@@ -7,7 +7,9 @@ const LargeButton = ({ children, disabled, onClick, loading }) => {
       onClick={onClick}
       className={classNames(
         "px-8 py-4 ml-2 text-2xl rounded-lg relative",
-        disabled ? "bg-gray-200 text-gray-500" : "bg-yellow-400"
+        disabled || loading
+          ? "bg-gray-200 text-gray-500"
+          : "bg-yellow-400 hover:-translate-y-1 drop-shadow-lg transition-transform"
       )}
       disabled={disabled || loading}
     >

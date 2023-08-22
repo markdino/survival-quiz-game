@@ -1,13 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useState, useEffect } from "react";
 import PlayerList from "./PlayerList";
-import StartGame from "./StartGame";
-import NextQuestion from "./NextQuestion";
 import { SocketContext } from "@websocket";
 import { GAME_TOPIC } from "@websocket/topics";
 import { getQuiz, revealQuiz, updateRoomData } from "@services/api";
 import UserContext from "@store/UserContext";
-import RevealChoices from "./RevealChoices";
 import Quiz from "./Quiz";
 import RightPanel from "./RightPanel";
 import LargeButton from "./LargeButton";
@@ -227,7 +223,7 @@ const CreatorView = ({ data }) => {
       <RightPanel>
         <LargeButton
           onClick={handleRevealAnswer}
-          disabled={!data?.started || timerStarted || data?.answer}
+          disabled={!data?.started || timerStarted || data?.answer || !revealChoice}
           loading={buttonLoading === 'reveal-answer'}
         >
           Reveal Answer

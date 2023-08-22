@@ -2,7 +2,7 @@ import classNames from "classnames";
 
 const choiceStyle =
   "w-full flex justify-center border-2 rounded-md border-black mt-4 mb-1 p-2 text-md";
-const wrongChoiceStyle = "border-4 rounded-md border-red-500 bg-red-500";
+// const wrongChoiceStyle = "border-4 rounded-md border-red-500 bg-red-500";
 const correctChoiceStyle = "border-4 rounded-md border-green-600 bg-green-500";
 
 const Choice = ({ choice, players, answer }) => {

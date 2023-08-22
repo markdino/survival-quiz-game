@@ -13,6 +13,9 @@ const nextConfig = {
         topLevelAwait: true,
       }
       return config
+    },
+    env: {
+      WS_SERVER_URI: process.env.WS_SERVER_URI,
     }
   }
   

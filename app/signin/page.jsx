@@ -1,11 +1,12 @@
 "use client";
 import LoginForm from "@components/LoginForm";
 import UserContext from "@store/UserContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Alert from "@components/Alert";
-import mainBg from '@assets/images/main-bg.jpg'
+import mainBg from "@assets/images/main-bg.jpg";
 import Glass from "@components/Glass";
+import FacebookLoading from "@components/Loading/FacebookLoading";
 
 const SignInPage = () => {
   const mainStyle = {
@@ -13,9 +14,8 @@ const SignInPage = () => {
     backgroundSize: "cover",
     backgroundPosition: "center center",
   };
-  
-  const { isLoggedIn, isChecking } =
-    useContext(UserContext);
+
+  const { isLoggedIn, isChecking } = useContext(UserContext);
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
@@ -33,22 +33,21 @@ const SignInPage = () => {
       goRedirect();
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, isChecking]);
 
   return (
     <section className="main min_h_occupied" style={mainStyle}>
       <section>
-      {isChecking ? (
-        <Alert show={isChecking} text="Checking user..." variant="light" />
-      ) : (
-        <Glass className="px-6 py-8">
-          <LoginForm
-            label="Sign in as Guest"
-            placeholder="Guest username"
-          />
-        </Glass>
-      )}
+        {isChecking ? (
+          <section className="flex flex-col justify-center items-center h-full pb-20">
+            <FacebookLoading />
+            <Alert show={isChecking} text="Checking user..." variant="light" />
+          </section>
+        ) : (
+          <Glass className="px-6 py-8">
+            <LoginForm label="Sign in as Guest" placeholder="Guest username" />
+          </Glass>
+        )}
       </section>
     </section>
   );

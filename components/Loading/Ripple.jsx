@@ -1,5 +1,4 @@
 import styles from "@styles/Ripple.module.css";
-import classNames from "classnames";
 
 const Ripple = ({ className }) => {
   return (

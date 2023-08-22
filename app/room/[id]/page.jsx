@@ -7,7 +7,10 @@ import { useContext, useEffect, useState } from "react";
 import { getRoomData, updateRoomData } from "@services/api";
 import UserContext from "@store/UserContext";
 import Alert from "@components/Alert";
-import gameBg from '@assets/images/game-bg.jpg'
+import gameBg from "@assets/images/game-bg.jpg";
+import MessageWrapper from "@components/MessageWrapper";
+import FacebookLoading from "@components/Loading/FacebookLoading";
+import Glass from "@components/Glass";
 
 const RoomPage = () => {
   const mainStyle = {
@@ -23,12 +26,8 @@ const RoomPage = () => {
   const [roomData, setRoomData] = useState(null);
   const [initialFetch, setInitialFetch] = useState(true);
 
-  const {
-    user,
-    isChecking,
-    requestFetch,
-    setRequestFetch,
-  } = useContext(UserContext);
+  const { user, isChecking, requestFetch, setRequestFetch } =
+    useContext(UserContext);
 
   useEffect(() => {
     if (initialFetch || requestFetch) {
@@ -62,19 +61,35 @@ const RoomPage = () => {
       });
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestFetch]);
 
   return (
     <SocketContext.Provider value={socket}>
-      <section className="min_h_occupied"  style={mainStyle}>
+      <section className="min_h_occupied" style={mainStyle}>
         <section className="container max-w-screen-xl mx-auto">
-          <Alert
-            text="Loading..."
-            show={(initialFetch && isLoading) || isChecking}
-            variant="ligth"
-          />
-          <Alert text={error?.message} show={error} variant="danger" />
+          {((initialFetch && isLoading) || isChecking) && (
+            <MessageWrapper className="justify-center flex-col fixed z-50 right-0 left-0">
+              <FacebookLoading />
+              <Alert
+                text={
+                  isChecking ? "Checking user..." : isLoading && "Loading..."
+                }
+                show={isLoading || isChecking}
+                variant="ligth"
+              />
+            </MessageWrapper>
+          )}
+          {error && (
+            <MessageWrapper className="justify-center fixed z-50 right-0 left-0">
+              <Glass className="p-8" opacity={0.3}>
+                <Alert
+                  text={error?.message || "Something went wrong!"}
+                  show={error}
+                  variant="danger"
+                />
+              </Glass>
+            </MessageWrapper>
+          )}
           {roomData &&
             !isChecking &&
             (user?.id === roomData.creator?._id ? (

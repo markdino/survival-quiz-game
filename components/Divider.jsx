@@ -2,13 +2,12 @@ import classNames from "classnames";
 
 const Divider = ({ text, className, ...props }) => {
   return (
-    <div className={classNames("relative", className)} {...props}>
+    <div className={classNames("flex justify-stretch items-center", {["gap-2"]: text}, className)} {...props}>
+      <div className="h-px bg-slate-600 w-full"></div>
       {text && (
-        <div className="absolute inset-x-0 inset-y-0 flex justify-center items-center">
-          <p className="px-5 bg-white text-slate-400 font-normal">{text}</p>
-        </div>
+         <p className="text-slate-600 font-normal">{text}</p>
       )}
-      <hr className="my-8" />
+    <div className="h-px bg-slate-600 w-full"></div>
     </div>
   );
 };
