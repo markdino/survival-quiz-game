@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useState, useEffect } from "react";
 import PlayerList from "./PlayerList";
-import StartGame from "./StartGame";
-import NextQuestion from "./NextQuestion";
 import { SocketContext } from "@websocket";
 import { GAME_TOPIC } from "@websocket/topics";
 import { getQuiz, revealQuiz, updateRoomData } from "@services/api";
 import UserContext from "@store/UserContext";
-import RevealChoices from "./RevealChoices";
 import Quiz from "./Quiz";
+import RightPanel from "./RightPanel";
+import LargeButton from "./LargeButton";
+import BottomPanel from "./BottomPanel";
 
 const CreatorView = ({ data }) => {
   const [quiz, setQuiz] = useState(null);
@@ -17,6 +17,7 @@ const CreatorView = ({ data }) => {
   const [answer, setAnswer] = useState("");
   const [timerStarted, setTimerStarted] = useState(false);
   const [revealChoice, setRevealChoice] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState("")
 
   const socket = useContext(SocketContext);
   const { setRequestFetch } = useContext(UserContext);
@@ -42,6 +43,8 @@ const CreatorView = ({ data }) => {
 
   const getMostSelectedAnswer = (callback) => {
     const activePlayers = data?.participants.filter((player) => player.active);
+    if (!activePlayers || activePlayers.length <= 0) return
+
     const answerCount = {};
 
     activePlayers.forEach((player) => {
@@ -66,11 +69,13 @@ const CreatorView = ({ data }) => {
   };
 
   const handleNewQuiz = () => {
+    setButtonLoading('next-question')
     getQuiz({
       exclude: archiveQuiz,
       onSuccess: (newQuiz) => {
         setArchiveQuiz((prev) => [...prev, newQuiz._id]);
         setQuiz(newQuiz);
+        setButtonLoading('')
         updateRoomData({
           roomId: data?._id,
           newData: {
@@ -79,12 +84,13 @@ const CreatorView = ({ data }) => {
             participants: clearParticipantsAnswer(),
             archivedQuiz: archiveQuiz,
           },
-          onSuccess: () => {
+          onSuccess: (data) => {
             setRequestFetch(true);
             setRevealChoice(false);
             socket.emit(GAME_TOPIC, {
               playerRequestFetch: true,
               newQuiz: true,
+              roomId: data?._id,
             });
           },
         });
@@ -93,6 +99,7 @@ const CreatorView = ({ data }) => {
   };
 
   const handleRevealAnswer = () => {
+    setButtonLoading('reveal-answer')
     if (data?.currentQuiz.type === "poll") {
       getMostSelectedAnswer((mostSelectedAnswer) => {
         updateRoomData({
@@ -101,11 +108,13 @@ const CreatorView = ({ data }) => {
             answer: mostSelectedAnswer,
             participants: validateParticipantsAnswer(mostSelectedAnswer),
           },
-          onSuccess: () => {
+          onSuccess: (data) => {
+            setButtonLoading('')
             setRequestFetch(true);
             socket.emit(GAME_TOPIC, {
               revealAnswer: true,
               answer: mostSelectedAnswer,
+              roomId: data?._id,
             });
           },
         });
@@ -121,9 +130,14 @@ const CreatorView = ({ data }) => {
               answer,
               participants: validateParticipantsAnswer(answer),
             },
-            onSuccess: () => {
+            onSuccess: (data) => {
+              setButtonLoading('')
               setRequestFetch(true);
-              socket.emit(GAME_TOPIC, { revealAnswer: true, answer });
+              socket.emit(GAME_TOPIC, {
+                revealAnswer: true,
+                answer,
+                roomId: data?._id,
+              });
             },
           });
         },
@@ -132,6 +146,7 @@ const CreatorView = ({ data }) => {
   };
 
   const handleGameStart = () => {
+    setButtonLoading('start-game')
     updateRoomData({
       roomId: data?._id,
       newData: { started: true },
@@ -143,12 +158,12 @@ const CreatorView = ({ data }) => {
 
   const handleTimerStart = () => {
     setTimerStarted(true);
-    socket.emit(GAME_TOPIC, { startTimer: true });
+    socket.emit(GAME_TOPIC, { startTimer: true, roomId: data?._id });
   };
 
   const handleRevealChoice = () => {
     setRevealChoice(true);
-    socket.emit(GAME_TOPIC, { revealChoice: true });
+    socket.emit(GAME_TOPIC, { revealChoice: true, roomId: data?._id });
   };
 
   // Setter on data reload
@@ -169,12 +184,15 @@ const CreatorView = ({ data }) => {
 
   // Listen to socket
   useEffect(() => {
+    const roomId = data?._id
     socket.on(GAME_TOPIC, (data) => {
-      if (data.creatorRequestFetch) {
-        setRequestFetch(true);
-      }
-      if (data.stopTimer) {
-        setTimerStarted(false);
+      if (data.roomId === roomId) {
+        if (data.creatorRequestFetch) {
+          setRequestFetch(true);
+        }
+        if (data.stopTimer) {
+          setTimerStarted(false);
+        }
       }
     });
   }, [socket]);
@@ -182,25 +200,46 @@ const CreatorView = ({ data }) => {
   return (
     <div className="flex items-center justify-center">
       <PlayerList players={data?.participants} />
-      <StartGame disabled={started} onClick={handleGameStart} />
       <Quiz
         revealChoices={revealChoice}
         answer={answer}
         quiz={data?.currentQuiz}
         players={data?.participants}
       />
-      <RevealChoices
-        onClickRevealChoice={handleRevealChoice}
-        onClickStartTimer={handleTimerStart}
-        disabledRevealChoice={!data?.started || revealChoice}
-        disabledStartTimer={!data?.started || timerStarted}
-      />
-      <NextQuestion
-        disabledNext={!data?.started || timerStarted}
-        disabledReveal={!data?.started || timerStarted || data?.answer}
-        handleNextQuestion={handleNewQuiz}
-        handleRevealAnswer={handleRevealAnswer}
-      />
+      <BottomPanel>
+        <LargeButton
+          onClick={handleRevealChoice}
+          disabled={!data?.started || revealChoice}
+        >
+          Reveal Choices
+        </LargeButton>
+        <LargeButton
+          onClick={handleTimerStart}
+          disabled={!data?.started || timerStarted}
+          loading={timerStarted}
+        >
+          Start Timer
+        </LargeButton>
+      </BottomPanel>
+      <RightPanel>
+        <LargeButton
+          onClick={handleRevealAnswer}
+          disabled={!data?.started || timerStarted || data?.answer || !revealChoice}
+          loading={buttonLoading === 'reveal-answer'}
+        >
+          Reveal Answer
+        </LargeButton>
+        <LargeButton
+          onClick={handleNewQuiz}
+          disabled={!data?.started || timerStarted}
+          loading={buttonLoading === 'next-question'}
+        >
+          Next Question
+        </LargeButton>
+        <LargeButton onClick={handleGameStart} disabled={started} loading={buttonLoading === 'start-game'}>
+          Start Game
+        </LargeButton>
+      </RightPanel>
     </div>
   );
 };

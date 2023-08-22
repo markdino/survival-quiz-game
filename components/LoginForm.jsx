@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import Divider from "./Divider";
 import { signIn, getProviders } from "next-auth/react";
 import Image from "next/image";
 import googleLogo from "@assets/images/google.png";
@@ -7,7 +6,7 @@ import classNames from "classnames";
 import Alert from "./Alert";
 import { signInUser } from "@services/api";
 import UserContext from "@store/UserContext";
-import Divider2 from "./Divider2";
+import Divider from "./Divider";
 
 const LoginForm = ({
   onSubmit = () => null,
@@ -19,10 +18,11 @@ const LoginForm = ({
   const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false);
   const [providers, setProviders] = useState(null);
 
-  const { checkLoggedUser, setUser, setIsLoggedIn, isLoggedIn } = useContext(UserContext);
+  const { checkLoggedUser, setUser, setIsLoggedIn, isLoggedIn } =
+    useContext(UserContext);
 
   const handleLogin = () => {
     signInUser({
@@ -30,23 +30,22 @@ const LoginForm = ({
       onSubmit: () => {
         setError(null);
         setIsLoading(true);
-        setIsSuccess(false)
+        setIsSuccess(false);
         onSubmit();
       },
       onSuccess: (data) => {
         localStorage.setItem("user", JSON.stringify(data));
-        // checkLoggedUser();
-        setUser(data),
-        setIsLoggedIn(true)
-        setIsSuccess(true)
+        setUser(data);
+        setIsLoggedIn(true);
+        setIsSuccess(true);
         onSuccess(data);
         setIsLoading(false);
-        setUsername("")
+        setUsername("");
       },
       onFailed: (response) => {
         setError({ message: response.data.error });
         onFailed(response);
-        setIsSuccess(false)
+        setIsSuccess(false);
         setIsLoading(false);
       },
     });
@@ -88,7 +87,7 @@ const LoginForm = ({
       <Alert show={isSuccess} text="Login success!" variant="success" />
       {providers && (
         <>
-         <Divider2 text="or" className="max-w-md mx-auto py-4" />
+          <Divider text="or" className="max-w-md mx-auto py-4" />
           <>
             {Object.values(providers).map((provider) => (
               <button

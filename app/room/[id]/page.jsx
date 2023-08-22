@@ -7,8 +7,18 @@ import { useContext, useEffect, useState } from "react";
 import { getRoomData, updateRoomData } from "@services/api";
 import UserContext from "@store/UserContext";
 import Alert from "@components/Alert";
+import gameBg from "@assets/images/game-bg.jpg";
+import MessageWrapper from "@components/MessageWrapper";
+import FacebookLoading from "@components/Loading/FacebookLoading";
+import Glass from "@components/Glass";
 
 const RoomPage = () => {
+  const mainStyle = {
+    backgroundImage: `url('${gameBg.src}')`,
+    backgroundSize: "cover",
+    backgroundPosition: "center center",
+  };
+
   const params = useParams();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -16,14 +26,8 @@ const RoomPage = () => {
   const [roomData, setRoomData] = useState(null);
   const [initialFetch, setInitialFetch] = useState(true);
 
-  const {
-    user,
-    isChecking,
-    requestFetch,
-    setRequestFetch,
-    setUser,
-    setIsLoggedIn,
-  } = useContext(UserContext);
+  const { user, isChecking, requestFetch, setRequestFetch } =
+    useContext(UserContext);
 
   useEffect(() => {
     if (initialFetch || requestFetch) {
@@ -60,32 +64,41 @@ const RoomPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestFetch]);
 
-  // useEffect(() => {
-  //   const localUser = localStorage.getItem("user")
-  //   if (!user && localUser) {
-  //     setUser(JSON.parse(localUser));
-  //     setIsLoggedIn(true);
-  //   }
-  // }, []);
-
-  console.log(roomData); //<<************/ Remove this console.log on deploy **********************
   return (
     <SocketContext.Provider value={socket}>
-      <section className="container max-w-screen-xl mx-auto">
-        {/* <div>Room {params?.id}</div> */}
-        <Alert
-          text="Loading..."
-          show={(initialFetch && isLoading) || isChecking}
-          variant="ligth"
-        />
-        <Alert text={error?.message} show={error} variant="danger" />
-        {roomData &&
-          !isChecking &&
-          (user?.id === roomData.creator?._id ? (
-            <CreatorView data={roomData} setRoomData={setRoomData} />
-          ) : (
-            <PlayerView data={roomData} />
-          ))}
+      <section className="min_h_occupied" style={mainStyle}>
+        <section className="container max-w-screen-xl mx-auto">
+          {((initialFetch && isLoading) || isChecking) && (
+            <MessageWrapper className="justify-center flex-col fixed z-50 right-0 left-0">
+              <FacebookLoading />
+              <Alert
+                text={
+                  isChecking ? "Checking user..." : isLoading && "Loading..."
+                }
+                show={isLoading || isChecking}
+                variant="ligth"
+              />
+            </MessageWrapper>
+          )}
+          {error && (
+            <MessageWrapper className="justify-center fixed z-50 right-0 left-0">
+              <Glass className="p-8" opacity={0.3}>
+                <Alert
+                  text={error?.message || "Something went wrong!"}
+                  show={error}
+                  variant="danger"
+                />
+              </Glass>
+            </MessageWrapper>
+          )}
+          {roomData &&
+            !isChecking &&
+            (user?.id === roomData.creator?._id ? (
+              <CreatorView data={roomData} setRoomData={setRoomData} />
+            ) : (
+              <PlayerView data={roomData} />
+            ))}
+        </section>
       </section>
     </SocketContext.Provider>
   );
