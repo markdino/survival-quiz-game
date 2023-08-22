@@ -7,6 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import mainBg from "@assets/images/main-bg.jpg";
 import Glass from "@components/Glass";
 import JoinField from "@components/JoinField";
+import FacebookLoading from "@components/Loading/FacebookLoading";
 
 const CreateRoomPage = () => {
   const mainStyle = {
@@ -18,9 +19,8 @@ const CreateRoomPage = () => {
   const [field, setField] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [code, setCode] = useState("")
-  const { isLoggedIn, user, isChecking } =
-    useContext(UserContext);
+  const [code, setCode] = useState("");
+  const { isLoggedIn, user, isChecking } = useContext(UserContext);
   const router = useRouter();
 
   const handleClick = () => {
@@ -33,7 +33,7 @@ const CreateRoomPage = () => {
         setIsLoading(true);
       },
       onSuccess: ({ code }) => {
-        setCode(code)
+        setCode(code);
         setIsLoading(false);
       },
       onFailed: ({ data }) => {
@@ -48,7 +48,6 @@ const CreateRoomPage = () => {
     if (!isChecking && !user && !localUser) {
       router.push("/signin?redirect=/room");
     }
-
   }, [user]);
   console.log({ error });
 
@@ -56,13 +55,20 @@ const CreateRoomPage = () => {
     <main className="main h-full" style={mainStyle}>
       <section className="w-fit mx-auto">
         {!isLoggedIn && isChecking ? (
-          <Alert text="Checking user..." show={isChecking} variant="light" />
+          <section className="flex flex-col justify-center items-center h-full pb-20">
+            <FacebookLoading />
+            <Alert show={true} text="Checking user..." variant="light" />
+          </section>
         ) : !isChecking && !isLoggedIn ? (
-          <Alert
-            text="No Logged User! Please sign in"
-            show={!isLoggedIn}
-            variant="light"
-          />
+          <section className="flex flex-col justify-center items-center h-full pb-20">
+            <Glass className="px-6 py-8">
+              <Alert
+                text="No Logged User! Please sign in"
+                show={!isLoggedIn}
+                variant="light"
+              />
+            </Glass>
+          </section>
         ) : (
           isLoggedIn && (
             <Glass className="p-16 flex flex-col gap-10">
@@ -80,12 +86,17 @@ const CreateRoomPage = () => {
                     />
                     <Alert text="Loading..." show={isLoading} variant="light" />
                     <Alert
-                      text={error?.message}
+                      text={error?.message || "Something went wrong!"}
                       show={error}
                       variant="danger"
                     />
                     {code && (
-                    <JoinField readOnly={true} input={code} title="Room code"  buttonText="Visit" />
+                      <JoinField
+                        readOnly={true}
+                        input={code}
+                        title="Room code"
+                        buttonText="Visit"
+                      />
                     )}
                     <button
                       onClick={handleClick}
