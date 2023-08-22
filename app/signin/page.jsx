@@ -33,7 +33,6 @@ const SignInPage = () => {
       goRedirect();
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, isChecking]);
 
   return (

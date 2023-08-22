@@ -49,7 +49,6 @@ const CreateRoomPage = () => {
       router.push("/signin?redirect=/room");
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
   console.log({ error });
 

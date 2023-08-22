@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useContext } from "react";
 import PlayerGame from "./PlayerGame";
 import PlayerLogin from "./PlayerLogin";
