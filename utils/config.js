@@ -1,1 +1,1 @@
-export const SOCKET_URL = "https://survival-game-ws-server.onrender.com"
+export const SOCKET_URL = process.env.WS_SERVER_URI || "https://survival-game-ws-server.onrender.com"

@@ -19,13 +19,8 @@ const handler = NextAuth({
 
       return session;
     },
-    async signIn({ account, profile }) {
+    async signIn({ profile }) {
 
-      // // only accept company google accounts. HAHAHAHA
-      // if (account.provider === 'google' && profile.hd !== 'crescendocollective.com'){
-      //   console.error('Restricted for company email only')
-      //   return false
-      // }
 
       try {
         await connectToDB();

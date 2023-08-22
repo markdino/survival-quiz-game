@@ -61,7 +61,6 @@ const RoomPage = () => {
       });
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestFetch]);
 
   return (

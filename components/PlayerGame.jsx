@@ -31,10 +31,10 @@ const PlayerGame = ({ currentQuiz, roomId, player }) => {
   const { user } = useContext(UserContext);
 
   // Choice component
-  const renderChoice = (text, index) => (
+  const renderChoice = (text) => (
     <li
       key={text}
-      className={handleChoiceStyles(text, index)}
+      className={handleChoiceStyles(text)}
       onClick={() => handleSelectAnswer(text)}
     >
       {text}
@@ -44,15 +44,11 @@ const PlayerGame = ({ currentQuiz, roomId, player }) => {
   // Select answer interaction logic
   const handleSelectAnswer = (text) => {
     if (disableSelect) return;
-    // if (text === selectedAnswer) {
-    //   setSelectedAnswer(null);
-    //   return;
-    // }
     setSelectedAnswer(text);
   };
 
   // Choices color handling if answers are shown
-  const handleChoiceStyles = (text, index) => {
+  const handleChoiceStyles = (text) => {
     
     if (answer) {
       if (selectedAnswer === text && answer !== text) return wrongChoiceStyle;
@@ -156,7 +152,7 @@ const PlayerGame = ({ currentQuiz, roomId, player }) => {
           {revealChoice && (
             <ul className="w-96">
               {choices.map((choice) =>
-                renderChoice(choice, choices.indexOf(choice))
+                renderChoice(choice)
               )}
             </ul>
           )}
