@@ -95,7 +95,7 @@ const LoginForm = ({
                 key={provider.name}
                 onClick={() => {
                   signIn(provider.id)
-                    .then(() => checkLoggedUser())
+                    // .then(() => checkLoggedUser())
                     .catch((error) => console.error(error));
                 }}
                 className="px-5 py-3 text-sm border rounded-lg w-full relative bg-white"
