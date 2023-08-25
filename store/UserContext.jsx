@@ -1,5 +1,5 @@
 "use client";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { createContext, useEffect, useState } from "react";
 import { getUserById } from "@services/api";
 
@@ -20,9 +20,13 @@ export const UserContextProvider = ({ children }) => {
   const [isChecking, setIsChecking] = useState(false);
   const [requestFetch, setRequestFetch] = useState(false);
 
-  const checkLoggedUser = async () => {
+  const { data: session, status } = useSession()
+
+  console.log({session, status})
+
+  const checkLoggedUser = () => {
     setIsChecking(true);
-    const session = await getSession();
+    // const session = await getSession();
     const localUser = localStorage.getItem("user");
 
     if (session?.user) {
@@ -65,7 +69,7 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     checkLoggedUser();
 
-  }, []);
+  }, [status]);
 
   const context = {
     isLoggedIn,
