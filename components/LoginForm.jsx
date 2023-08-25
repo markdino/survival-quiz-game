@@ -14,6 +14,7 @@ const LoginForm = ({
   onFailed = () => null,
   label,
   placeholder,
+  providerCallbackUrl,
 }) => {
   const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
@@ -21,8 +22,7 @@ const LoginForm = ({
   const [isSuccess, setIsSuccess] = useState(false);
   const [providers, setProviders] = useState(null);
 
-  const { checkLoggedUser, setUser, setIsLoggedIn, isLoggedIn } =
-    useContext(UserContext);
+  const { setUser, setIsLoggedIn, isLoggedIn } = useContext(UserContext);
 
   const handleLogin = () => {
     signInUser({
@@ -93,8 +93,9 @@ const LoginForm = ({
               <button
                 type="button"
                 key={provider.name}
-                onClick={() => {
-                  signIn(provider.id)
+                onClick={(e) => {
+                  e.preventDefault();
+                  signIn(provider.id, { callbackUrl: providerCallbackUrl })
                     // .then(() => checkLoggedUser())
                     .catch((error) => console.error(error));
                 }}
