@@ -29,7 +29,7 @@ export const UserContextProvider = ({ children }) => {
     // const session = await getSession();
     const localUser = localStorage.getItem("user");
 
-    if (session?.user) {
+    if (status === "authenticated" && session?.user) {
       const { name, ...rest } = session.user;
       setUser({
         username: name,
@@ -37,7 +37,7 @@ export const UserContextProvider = ({ children }) => {
       });
       setIsLoggedIn(true);
       setIsChecking(false);
-      console.log("Success logged user with session", session.user);
+      console.log("Success logged user with session", session.user, status);
     } else if (localUser) {
       const { id } = JSON.parse(localUser);
       getUserById({

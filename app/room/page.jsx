@@ -8,6 +8,7 @@ import mainBg from "@assets/images/main-bg.jpg";
 import Glass from "@components/Glass";
 import JoinField from "@components/JoinField";
 import FacebookLoading from "@components/Loading/FacebookLoading";
+import { useSession } from "next-auth/react";
 
 const CreateRoomPage = () => {
   const mainStyle = {
@@ -22,6 +23,8 @@ const CreateRoomPage = () => {
   const [code, setCode] = useState("");
   const { isLoggedIn, user, isChecking } = useContext(UserContext);
   const router = useRouter();
+
+  const { status } = useSession()
 
   const handleClick = () => {
     if (!field) return;
@@ -45,16 +48,16 @@ const CreateRoomPage = () => {
 
   useEffect(() => {
     const localUser = localStorage.getItem("user");
-    if (!isChecking && !user && !localUser) {
+    if (status !== "loading" && !isChecking && !user && !localUser) {
       router.push("/signin?redirect=/room");
     }
-  }, [user]);
+  }, [user, status]);
   console.log({ error });
 
   return (
     <main className="main h-full" style={mainStyle}>
       <section className="w-fit mx-auto">
-        {!isLoggedIn && isChecking ? (
+        {!isLoggedIn && (status === "loading" || isChecking) ? (
           <section className="flex flex-col justify-center items-center h-full pb-20">
             <FacebookLoading />
             <Alert show={true} text="Checking user..." variant="light" />
