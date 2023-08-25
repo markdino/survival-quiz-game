@@ -32,7 +32,6 @@ const SignInPage = () => {
     if (!isChecking && isLoggedIn) {
       goRedirect();
     }
-
   }, [isLoggedIn, isChecking]);
 
   return (
@@ -45,7 +44,11 @@ const SignInPage = () => {
           </section>
         ) : (
           <Glass className="px-6 py-8">
-            <LoginForm label="Sign in as Guest" placeholder="Guest username" />
+            <LoginForm
+              label="Sign in as Guest"
+              placeholder="Guest username"
+              providerCallbackUrl={redirect}
+            />
           </Glass>
         )}
       </section>
