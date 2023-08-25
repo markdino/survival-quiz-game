@@ -51,7 +51,7 @@ const CreateRoomPage = () => {
     if (status !== "loading" && !isChecking && !user && !localUser) {
       router.push("/signin?redirect=/room");
     }
-  }, [user, status]);
+  }, [user]);
   console.log({ error });
 
   return (
