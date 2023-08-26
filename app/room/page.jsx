@@ -3,12 +3,13 @@ import Alert from "@components/Alert";
 import { createRoom } from "@services/api";
 import UserContext from "@store/UserContext";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import mainBg from "@assets/images/main-bg.jpg";
 import Glass from "@components/Glass";
 import JoinField from "@components/JoinField";
 import FacebookLoading from "@components/Loading/FacebookLoading";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const CreateRoomPage = () => {
   const mainStyle = {
@@ -24,7 +25,7 @@ const CreateRoomPage = () => {
   const { isLoggedIn, user, isChecking } = useContext(UserContext);
   const router = useRouter();
 
-  const { status } = useSession()
+  const { status } = useSession();
 
   const handleClick = () => {
     if (!field) return;
@@ -46,14 +47,6 @@ const CreateRoomPage = () => {
     });
   };
 
-  useEffect(() => {
-    const localUser = localStorage.getItem("user");
-    if (status !== "loading" && !isChecking && !user && !localUser) {
-      router.push("/signin?redirect=/room");
-    }
-  }, [user]);
-  console.log({ error });
-
   return (
     <main className="main h-full" style={mainStyle}>
       <section className="w-fit mx-auto">
@@ -66,10 +59,24 @@ const CreateRoomPage = () => {
           <section className="flex flex-col justify-center items-center h-full pb-20">
             <Glass className="px-6 py-8">
               <Alert
-                text="No Logged User! Please sign in"
+                text="Unauthorized access! Please sign in"
                 show={!isLoggedIn}
                 variant="light"
               />
+              <div className="flex gap-3 justify-end w-full pt-4">
+                <section className="bg-white rounded-full">
+                  <button
+                    type="button"
+                    onClick={() => router.back()}
+                    className="outline_btn"
+                  >
+                    Back
+                  </button>
+                </section>
+                <Link href="/signin?redirect=/room" className="black_btn">
+                  Sign In
+                </Link>
+              </div>
             </Glass>
           </section>
         ) : (

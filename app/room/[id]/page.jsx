@@ -49,7 +49,9 @@ const RoomPage = () => {
           setInitialFetch(false);
         },
         onFailed: (response) => {
-          if (response.status === 500) {
+          if (response.status === 404) {
+            setError({ message: response.data });
+          } else if (response.status === 500) {
             setError({ message: response.statusText });
           } else {
             setError({ message: response?.data?.error });
@@ -60,7 +62,6 @@ const RoomPage = () => {
         },
       });
     }
-
   }, [requestFetch]);
 
   return (
