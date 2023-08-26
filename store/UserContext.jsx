@@ -1,5 +1,5 @@
 "use client";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { createContext, useEffect, useState } from "react";
 import { getUserById } from "@services/api";
 
@@ -20,13 +20,10 @@ export const UserContextProvider = ({ children }) => {
   const [isChecking, setIsChecking] = useState(false);
   const [requestFetch, setRequestFetch] = useState(false);
 
-  const { data: session, status } = useSession()
-
-  console.log({session, status})
+  const { data: session, status } = useSession();
 
   const checkLoggedUser = () => {
     setIsChecking(true);
-    // const session = await getSession();
     const localUser = localStorage.getItem("user");
 
     if (status === "authenticated" && session?.user) {
@@ -46,7 +43,10 @@ export const UserContextProvider = ({ children }) => {
           setUser(data);
           setIsLoggedIn(true);
           setIsChecking(false);
-          console.log("Success logged user with localStorage", JSON.parse(localUser));
+          console.log(
+            "Success logged user with localStorage",
+            JSON.parse(localUser)
+          );
         },
         onFailed: (error) => {
           localStorage.removeItem("user");
@@ -60,7 +60,7 @@ export const UserContextProvider = ({ children }) => {
       setUser(null);
       setIsLoggedIn(false);
       setIsChecking(false);
-      console.log("Checked! No user yet", {localUser});
+      console.log("Checked! No user yet", { localUser });
     }
 
     return user;
@@ -68,7 +68,6 @@ export const UserContextProvider = ({ children }) => {
 
   useEffect(() => {
     checkLoggedUser();
-
   }, [status]);
 
   const context = {
