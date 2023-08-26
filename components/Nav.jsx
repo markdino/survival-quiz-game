@@ -10,7 +10,7 @@ import DualRing from "./Loading/DualRing";
 import { usePathname } from "next/navigation";
 
 const Nav = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const { isLoggedIn, checkLoggedUser, user, isChecking } =
     useContext(UserContext);
   const pathName = usePathname();
@@ -35,7 +35,7 @@ const Nav = () => {
       </Link>
 
       <div>
-        {isChecking ? (
+        {status === "loading" || isChecking ? (
           <section className="px-8">
             <DualRing />
           </section>
