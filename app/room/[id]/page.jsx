@@ -11,6 +11,7 @@ import gameBg from "@assets/images/game-bg.jpg";
 import MessageWrapper from "@components/MessageWrapper";
 import FacebookLoading from "@components/Loading/FacebookLoading";
 import Glass from "@components/Glass";
+import { useSession } from "next-auth/react";
 
 const Room = () => {
   const mainStyle = {
@@ -20,6 +21,7 @@ const Room = () => {
   };
 
   const params = useParams();
+  const { status } = useSession();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -87,12 +89,18 @@ const Room = () => {
   return (
     <section className="min_h_occupied" style={mainStyle}>
       <section className="container max-w-screen-xl mx-auto">
-        {((initialFetch && isLoading) || isChecking) && (
+        {((initialFetch && isLoading) ||
+          isChecking ||
+          status === "loading") && (
           <MessageWrapper className="justify-center flex-col fixed z-50 right-0 left-0">
             <FacebookLoading />
             <Alert
-              text={isChecking ? "Checking user..." : isLoading && "Loading..."}
-              show={isLoading || isChecking}
+              text={
+                isChecking || status === "loading"
+                  ? "Checking user..."
+                  : isLoading && "Loading..."
+              }
+              show={true}
               variant="ligth"
             />
           </MessageWrapper>
