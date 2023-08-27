@@ -12,7 +12,7 @@ import MessageWrapper from "@components/MessageWrapper";
 import FacebookLoading from "@components/Loading/FacebookLoading";
 import Glass from "@components/Glass";
 
-const RoomPage = () => {
+const Room = () => {
   const mainStyle = {
     backgroundImage: `url('${gameBg.src}')`,
     backgroundSize: "cover",
@@ -28,6 +28,8 @@ const RoomPage = () => {
 
   const { user, isChecking, requestFetch, setRequestFetch } =
     useContext(UserContext);
+
+  const socket = useContext(SocketContext);
 
   useEffect(() => {
     if (initialFetch || requestFetch) {
@@ -64,44 +66,64 @@ const RoomPage = () => {
     }
   }, [requestFetch]);
 
+  useEffect(() => {
+    if (!socket.connected) {
+      socket.connect();
+    }
+
+    socket.on("connect", () => {
+      console.log("Socket connected:", socket.connected);
+    });
+
+    socket.on("disconnect", (reason) => {
+      console.log("Socket disconnected!", reason);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   return (
-    <SocketContext.Provider value={socket}>
-      <section className="min_h_occupied" style={mainStyle}>
-        <section className="container max-w-screen-xl mx-auto">
-          {((initialFetch && isLoading) || isChecking) && (
-            <MessageWrapper className="justify-center flex-col fixed z-50 right-0 left-0">
-              <FacebookLoading />
+    <section className="min_h_occupied" style={mainStyle}>
+      <section className="container max-w-screen-xl mx-auto">
+        {((initialFetch && isLoading) || isChecking) && (
+          <MessageWrapper className="justify-center flex-col fixed z-50 right-0 left-0">
+            <FacebookLoading />
+            <Alert
+              text={isChecking ? "Checking user..." : isLoading && "Loading..."}
+              show={isLoading || isChecking}
+              variant="ligth"
+            />
+          </MessageWrapper>
+        )}
+        {error && (
+          <MessageWrapper className="justify-center fixed z-50 right-0 left-0">
+            <Glass className="p-8" opacity={0.3}>
               <Alert
-                text={
-                  isChecking ? "Checking user..." : isLoading && "Loading..."
-                }
-                show={isLoading || isChecking}
-                variant="ligth"
+                text={error?.message || "Something went wrong!"}
+                show={error}
+                variant="danger"
               />
-            </MessageWrapper>
-          )}
-          {error && (
-            <MessageWrapper className="justify-center fixed z-50 right-0 left-0">
-              <Glass className="p-8" opacity={0.3}>
-                <Alert
-                  text={error?.message || "Something went wrong!"}
-                  show={error}
-                  variant="danger"
-                />
-              </Glass>
-            </MessageWrapper>
-          )}
-          {roomData &&
-            !isChecking &&
-            (user?.id === roomData.creator?._id ? (
-              <CreatorView data={roomData} setRoomData={setRoomData} />
-            ) : (
-              <PlayerView data={roomData} />
-            ))}
-        </section>
+            </Glass>
+          </MessageWrapper>
+        )}
+        {roomData &&
+          !isChecking &&
+          (user?.id === roomData.creator?._id ? (
+            <CreatorView data={roomData} setRoomData={setRoomData} />
+          ) : (
+            <PlayerView data={roomData} />
+          ))}
       </section>
-    </SocketContext.Provider>
+    </section>
   );
 };
+
+const RoomPage = () => (
+  <SocketContext.Provider value={socket}>
+    <Room />
+  </SocketContext.Provider>
+);
 
 export default RoomPage;
