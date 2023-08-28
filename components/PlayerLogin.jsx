@@ -42,6 +42,7 @@ const PlayerLogin = ({ roomId }) => {
         </Glass>
       ) : (
         !isChecking &&
+        user &&
         joinRoom({
           roomId,
           userId: user?.id,
