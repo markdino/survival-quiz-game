@@ -204,6 +204,7 @@ const CreatorView = ({ data }) => {
         answer={answer}
         quiz={data?.currentQuiz}
         players={data?.participants}
+        started={data?.started}
       />
       <BottomPanel>
         <LargeButton
