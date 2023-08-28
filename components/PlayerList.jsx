@@ -21,20 +21,19 @@ const PlayerName = ({ userName, isActive }) => {
   );
 };
 
-const PlayerList = ({ players = [] }) => {
+const PlayerList = ({ players = [], activePlayersCount = 0 }) => {
   const playersCount = players.length;
-  const activePlayers = players.filter((player) => player.active);
-  const activePlayersCount = activePlayers.length;
   return (
     <Glass
       className="flex flex-col items-center w-1/4 mt-16 mb-8 mx-8 py-8 px-4 absolute top-5 left-0 bottom-0"
       opacity={0.3}
     >
       <section className="flex justify-between w-full px-4">
-      <h3 className="text-2xl font-bold text-amber-400">
-        List of Players:
-      </h3>
-      <p>{activePlayersCount}/{playersCount}</p>
+        <h3 className="text-2xl font-bold text-amber-400">List of Players:</h3>
+        <Glass className="px-2 py-1" opacity={0.6}>
+          <span className="text-green-500 font-bold">{activePlayersCount}</span>
+          /{playersCount}
+        </Glass>
       </section>
       <ul className="w-full py-4 px-4 overflow-auto">
         <Glass opacity={0.5} shadow={0.5} shadowY="10px" shadowX="6px">
