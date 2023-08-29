@@ -42,7 +42,6 @@ const WaitingGif = () => {
       setBackgroundColor("#fcfefc");
       clearInterval(intervalId);
     }
-    console.log({ timerCount });
   }, [timerCount]);
 
   return (
