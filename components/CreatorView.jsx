@@ -199,8 +199,6 @@ const CreatorView = ({ data }) => {
     });
   }, [socket]);
 
-  console.log({ data });
-
   return (
     <div className="flex items-center justify-center">
       <PlayerList
